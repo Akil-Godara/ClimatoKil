@@ -2,7 +2,7 @@
 
 A comprehensive climate data visualization platform tracking environmental changes across **Afghanistan, Pakistan, and India** from 1960 to present.
 
-**Live Website:** [climatokil.pages.dev](https://climatokil.pages.dev)
+**Live Website:** [climatokil.pages.dev](https://climato-kil.akeelgodara63.workers.dev/)
 
 ---
 
@@ -22,19 +22,19 @@ ClimatoKil is a data-driven archive that visualizes long-term climate transforma
 
 ## 🗺️ Countries Covered
 
-### 🇦🇫 Afghanistan
+###  Afghanistan
 - Temperature: +1.8°C since 1960
 - Precipitation: -12% decrease
 - Glacier loss: -25% in Hindu Kush
 - Water resources: -30% reduction
 
-### 🇵🇰 Pakistan
+###  Pakistan
 - Temperature: +1.5°C since 1960
 - Precipitation: +8% (highly erratic)
 - Glacier loss: -35% in Karakoram
 - Water stress: Critical (1000m³ per capita)
 
-### 🇮🇳 India
+###  India
 - Temperature: +1.3°C since 1960
 - Precipitation: +10% (erratic monsoons)
 - Glacier loss: -40% in Himalayas
@@ -84,28 +84,3 @@ Climate data synthesized from reports by:
 - **ESA** - European Space Agency
 - **World Bank** - Climate Change Knowledge Portal
 - **UNFCCC** - Greenhouse Gas Inventory
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Git](https://git-scm.com/)
-- Code editor (VS Code recommended)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/Akil-Godara/ClimatoKil.git
-
-# Navigate to project directory
-cd ClimatoKil
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
