@@ -1,253 +1,1019 @@
 ---
-// ClimatoKil - Full Website with all sections
 const title = "ClimatoKil - South Asia Climate Data Archive";
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
-    <style>
-        /* Add all your CSS styles here */
-        :root {
-            --ocean: #0a4d68;
-            --ocean-deep: #053547;
-            --sky: #088395;
-            --ice: #05bfdb;
-            --warm: #e63946;
-            --earth: #2a9d8f;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #1a1a2e;
-        }
-        header {
-            background: linear-gradient(135deg, var(--ocean-deep), var(--sky));
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-        }
-        header h1 { font-size: 3rem; margin-bottom: 10px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-        .section { margin-bottom: 60px; }
-        .section h2 { 
-            font-size: 2.5rem; 
-            color: var(--ocean-deep);
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .country-header {
-            background: linear-gradient(135deg, var(--ocean), var(--sky));
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-        }
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .data-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-top: 4px solid var(--ice);
-        }
-        .data-card h3 { color: var(--ocean-deep); margin-bottom: 10px; }
-        .metric { 
-            font-size: 2rem; 
-            font-weight: bold; 
-            color: var(--warm);
-            margin: 10px 0;
-        }
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-        button {
-            background: var(--ice);
-            color: white;
-            padding: 14px 28px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-        button:hover { background: var(--sky); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<style>
+  :root {
+    --coffee: #d4a574;
+    --coffee-light: #e8d4b8;
+    --coffee-dark: #8b6f47;
+    --ocean: #5b9ea6;
+    --ocean-light: #a8d5d9;
+    --ocean-deep: #2c5f6b;
+    --sky: #87b7c4;
+    --sky-light: #c5dfe6;
+    --warm: #c17a5a;
+    --warm-soft: #d4a574;
+    --earth: #7a9e7e;
+    --cream: #f5f1eb;
+    --dark: #3a3a3a;
+    --gray: #6b6b6b;
+    --light-gray: #e8e4de;
+    --font-display: 'Georgia', serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--dark);
+    line-height: 1.6;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(44, 95, 107, 0.95);
+    backdrop-filter: blur(10px);
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+    font-weight: 500;
+  }
+  nav a:hover { background: rgba(255,255,255,0.15); }
+
+  .hero {
+    background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean) 50%, var(--sky) 100%);
+    color: white;
+    padding: 120px 24px 100px;
+  }
+  .hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255,255,255,0.3);
+    font-weight: 600;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 4.2rem);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    max-width: 900px;
+  }
+  .hero h1 span {
+    background: linear-gradient(90deg, var(--ocean-light), var(--coffee-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 1.2rem;
+    max-width: 750px;
+    opacity: 0.95;
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 14px 32px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+  .btn-primary { background: var(--ocean-light); color: var(--ocean-deep); }
+  .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.5); }
+  .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+  section { padding: 90px 24px; }
+  .container { max-width: 1400px; margin: 0 auto; }
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .section-header .tag {
+    display: inline-block;
+    background: var(--ocean-light);
+    color: var(--ocean-deep);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 20px;
+  }
+  .section-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--ocean-deep);
+    margin-bottom: 16px;
+  }
+  .section-header p {
+    color: var(--gray);
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+  }
+  .intro-content h3 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--ocean-deep);
+    margin-bottom: 20px;
+  }
+  .definition {
+    background: linear-gradient(135deg, var(--cream), white);
+    border-left: 4px solid var(--ocean);
+    padding: 24px;
+    margin: 24px 0;
+    border-radius: 8px;
+    font-style: italic;
+    color: var(--dark);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  .definition strong {
+    color: var(--ocean);
+    display: block;
+    margin-bottom: 8px;
+    font-style: normal;
+  }
+  .intro-image {
+    background: linear-gradient(135deg, var(--sky), var(--earth));
+    border-radius: 12px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .country-section {
+    background: linear-gradient(180deg, var(--cream), white);
+  }
+  .country-header {
+    background: linear-gradient(135deg, var(--ocean), var(--sky));
+    color: white;
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+  }
+  .country-header h3 {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+  }
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  .data-card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s;
+    border-top: 4px solid var(--ocean);
+  }
+  .data-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  }
+  .data-card h4 {
+    font-family: var(--font-display);
+    color: var(--ocean-deep);
+    margin-bottom: 12px;
+    font-size: 1.3rem;
+  }
+  .metric {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--ocean);
+    margin: 12px 0;
+    font-family: var(--font-display);
+  }
+  .data-card p {
+    color: var(--gray);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .trend {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 12px;
+  }
+  .trend.up { background: rgba(193, 122, 90, 0.15); color: var(--warm); }
+  .trend.down { background: rgba(122, 158, 126, 0.15); color: var(--earth); }
+  .trend.stable { background: rgba(91, 158, 166, 0.15); color: var(--ocean); }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 30px;
+  }
+  .chart-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid var(--light-gray);
+  }
+  .chart-card h3 {
+    font-family: var(--font-display);
+    color: var(--ocean-deep);
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+  }
+  .chart-wrapper {
+    position: relative;
+    height: 320px;
+    margin-top: 20px;
+  }
+
+  .map-container {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+  #worldMap { height: 600px; border-radius: 8px; }
+
+  .agencies-section {
+    background: var(--ocean-deep);
+    color: white;
+  }
+  .agencies-section .section-header h2 { color: white; }
+  .agencies-section .section-header p { color: rgba(255,255,255,0.8); }
+  .agencies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .agency-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 32px;
+    transition: all 0.3s;
+  }
+  .agency-card:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateY(-4px);
+  }
+  .agency-card h4 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    color: var(--ocean-light);
+  }
+  .acronym {
+    display: inline-block;
+    background: var(--ocean-light);
+    color: var(--ocean-deep);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .resource-card {
+    background: linear-gradient(135deg, var(--cream), white);
+    border: 1px solid var(--light-gray);
+    border-radius: 12px;
+    padding: 28px;
+    transition: all 0.3s;
+    border-left: 4px solid var(--sky);
+  }
+  .resource-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .resource-card h4 {
+    font-family: var(--font-display);
+    color: var(--ocean-deep);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  .type {
+    display: inline-block;
+    background: var(--sky);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 36px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--ocean-deep);
+    margin-bottom: 6px;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--light-gray);
+    border-radius: 6px;
+    font-size: 0.95rem;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--ocean);
+  }
+  textarea { min-height: 120px; resize: vertical; }
+  button {
+    background: var(--ocean);
+    color: white;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+  }
+  button:hover { background: var(--ocean-deep); }
+
+  footer {
+    background: var(--dark);
+    color: white;
+    padding: 50px 24px 30px;
+    text-align: center;
+  }
+
+  @media (max-width: 968px) {
+    .intro-grid { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    nav ul { display: none; }
+    .data-grid { grid-template-columns: 1fr; }
+    #worldMap { height: 400px; }
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>🌍 ClimatoKil</h1>
-        <p>South Asia Climate Data Archive</p>
-    </header>
 
-    <main>
-        <!-- Introduction Section -->
-        <section class="container section">
-            <h2>Understanding Climate Change in South Asia</h2>
-            <p style="text-align: center; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
-                Comprehensive climate data visualization and analysis for Afghanistan, Pakistan, and India. 
-                Tracking temperature, precipitation, atmospheric changes, and environmental transformations from 1960 to present.
-            </p>
-        </section>
+  <header>
+    <div class="nav-container">
+      <div class="logo">
+        <span>ClimatoKil</span>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#afghanistan">Afghanistan</a></li>
+          <li><a href="#pakistan">Pakistan</a></li>
+          <li><a href="#india">India</a></li>
+          <li><a href="#maps">Maps</a></li>
+          <li><a href="#agencies">Agencies</a></li>
+          <li><a href="#resources">Resources</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-        <!-- Afghanistan Section -->
-        <section class="container section">
-            <div class="country-header">
-                <h2>🇦🇫 Afghanistan</h2>
-                <p>Climate Data & Environmental Indicators | 1960-2024</p>
-            </div>
-            <div class="data-grid">
-                <div class="data-card">
-                    <h3>🌡️ Temperature</h3>
-                    <div class="metric">+1.8°C</div>
-                    <p>Average temperature increase since 1960. Warming rate exceeds global average.</p>
-                </div>
-                <div class="data-card">
-                    <h3>🌧️ Precipitation</h3>
-                    <div class="metric">-12%</div>
-                    <p>Overall decrease in annual precipitation with increased variability.</p>
-                </div>
-                <div class="data-card">
-                    <h3>🏔️ Cryosphere</h3>
-                    <div class="metric">-25%</div>
-                    <p>Glacier mass loss in Hindu Kush mountains.</p>
-                </div>
-                <div class="data-card">
-                    <h3>💧 Water Resources</h3>
-                    <div class="metric">-30%</div>
-                    <p>Reduction in water availability per capita.</p>
-                </div>
-            </div>
-        </section>
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-badge">South Asia Climate Data Archive</span>
+      <h1>Understanding <span>Climate Change</span> Across South Asia</h1>
+      <p>Comprehensive climate data visualization and analysis for Afghanistan, Pakistan, and India. Tracking temperature, precipitation, atmospheric changes, and environmental transformations from 1960 to present.</p>
+      <div class="hero-buttons">
+        <a href="#afghanistan" class="btn btn-primary">Explore Data</a>
+        <a href="#maps" class="btn btn-outline">View Maps</a>
+      </div>
+    </div>
+  </section>
 
-        <!-- Pakistan Section -->
-        <section class="container section">
-            <div class="country-header">
-                <h2>🇵 Pakistan</h2>
-                <p>Climate Data & Environmental Indicators | 1960-2024</p>
-            </div>
-            <div class="data-grid">
-                <div class="data-card">
-                    <h3>🌡️ Temperature</h3>
-                    <div class="metric">+1.5°C</div>
-                    <p>Average temperature rise since 1960. Urban heat islands showing +2.5°C.</p>
-                </div>
-                <div class="data-card">
-                    <h3>🌧️ Precipitation</h3>
-                    <div class="metric">+8%</div>
-                    <p>Overall increase but highly erratic. Monsoon intensity up 25%.</p>
-                </div>
-                <div class="data-card">
-                    <h3>🏔️ Cryosphere</h3>
-                    <div class="metric">-35%</div>
-                    <p>Glacier retreat in Karakoram and Himalayas.</p>
-                </div>
-                <div class="data-card">
-                    <h3>🔥 Heatwaves</h3>
-                    <div class="metric">+52°C</div>
-                    <p>Record temperatures in Sindh and Punjab.</p>
-                </div>
-            </div>
-        </section>
+  <section class="container" id="intro">
+    <div class="section-header">
+      <span class="tag">Understanding Climate Change</span>
+      <h2>Introduction to Climate Science</h2>
+    </div>
+    <div class="intro-grid">
+      <div class="intro-content">
+        <h3>What is Climate Change?</h3>
+        <div class="definition">
+          <strong>IPCC Definition:</strong>
+          "Climate change refers to a change of climate that is attributed directly or indirectly to human activity that alters the composition of the global atmosphere and that is in addition to natural climate variability observed over comparable time periods."
+        </div>
+        <div class="definition">
+          <strong>UNFCCC Definition:</strong>
+          "A change of climate which is attributed directly or indirectly to human activity that alters the composition of the global atmosphere and which is in addition to natural climate variability observed over comparable time periods."
+        </div>
+        <p><strong>Researcher Perspectives:</strong> Climate change represents long-term shifts in temperatures and weather patterns, primarily caused by human activities, especially the burning of fossil fuels (coal, oil, and gas), which produces heat-trapping greenhouse gases.</p>
+        <p>South Asia, home to over 1.8 billion people, is one of the most vulnerable regions to climate change impacts, facing rising temperatures, changing monsoon patterns, glacial melt, sea-level rise, and increased frequency of extreme weather events.</p>
+      </div>
+      <div class="intro-image">
+        <div>
+          <div style="font-size: 3rem; margin-bottom: 20px;">Climate Data Archive</div>
+          <div>Afghanistan - Pakistan - India<br/>1960 - 2024</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- India Section -->
-        <section class="container section">
-            <div class="country-header">
-                <h2>🇮🇳 India</h2>
-                <p>Climate Data & Environmental Indicators | 1960-2024</p>
-            </div>
-            <div class="data-grid">
-                <div class="data-card">
-                    <h3>🌡️ Temperature</h3>
-                    <div class="metric">+1.3°C</div>
-                    <p>Average temperature increase. Himalayan region warming 2x faster.</p>
-                </div>
-                <div class="data-card">
-                    <h3>🌧️ Precipitation</h3>
-                    <div class="metric">+10%</div>
-                    <p>Monsoon rainfall increased but more erratic.</p>
-                </div>
-                <div class="data-card">
-                    <h3>🏔️ Cryosphere</h3>
-                    <div class="metric">-40%</div>
-                    <p>Himalayan glaciers retreating rapidly.</p>
-                </div>
-                <div class="data-card">
-                    <h3>💧 Water Resources</h3>
-                    <div class="metric">-45%</div>
-                    <p>Groundwater depletion in Punjab, Haryana, Rajasthan.</p>
-                </div>
-            </div>
-        </section>
+  <section class="country-section" id="afghanistan">
+    <div class="container">
+      <div class="country-header">
+        <h3>Afghanistan</h3>
+        <p>Climate Data and Environmental Indicators | 1960-2024</p>
+      </div>
+      <div class="data-grid">
+        <div class="data-card">
+          <h4>Temperature</h4>
+          <div class="metric">+1.8°C</div>
+          <p>Average temperature increase since 1960. Warming rate exceeds global average, particularly in northern and central highlands.</p>
+          <span class="trend up">Rising Trend</span>
+        </div>
+        <div class="data-card">
+          <h4>Precipitation</h4>
+          <div class="metric">-12%</div>
+          <p>Overall decrease in annual precipitation. Increased variability with more intense rainfall events and longer dry periods.</p>
+          <span class="trend down">Decreasing</span>
+        </div>
+        <div class="data-card">
+          <h4>Wind Pressure</h4>
+          <div class="metric">1013 hPa</div>
+          <p>Average atmospheric pressure. Seasonal variations intensifying, affecting monsoon patterns and dust storm frequency.</p>
+          <span class="trend stable">Variable</span>
+        </div>
+        <div class="data-card">
+          <h4>Atmospheric Gases</h4>
+          <div class="metric">415 ppm</div>
+          <p>CO₂ concentration levels. Methane emissions from agriculture and livestock contributing to greenhouse effect.</p>
+          <span class="trend up">Increasing</span>
+        </div>
+        <div class="data-card">
+          <h4>Cryosphere</h4>
+          <div class="metric">-25%</div>
+          <p>Glacier mass loss in Hindu Kush mountains. Snow cover duration reduced by 2-3 weeks over past 40 years.</p>
+          <span class="trend down">Rapid Melt</span>
+        </div>
+        <div class="data-card">
+          <h4>Soil Moisture</h4>
+          <div class="metric">-18%</div>
+          <p>Decline in soil moisture content. Increased desertification and land degradation affecting 75% of agricultural land.</p>
+          <span class="trend down">Drying</span>
+        </div>
+        <div class="data-card">
+          <h4>Water Resources</h4>
+          <div class="metric">-30%</div>
+          <p>Reduction in water availability per capita. Groundwater depletion and reduced river flows from glacier melt.</p>
+          <span class="trend down">Critical</span>
+        </div>
+        <div class="data-card">
+          <h4>El Niño / La Niña</h4>
+          <div class="metric">Impact</div>
+          <p>Strong correlation with drought cycles. El Niño events cause severe droughts; La Niña brings flooding.</p>
+          <span class="trend up">Intensifying</span>
+        </div>
+        <div class="data-card">
+          <h4>Heatwaves</h4>
+          <div class="metric">+45°C</div>
+          <p>Maximum temperatures during heatwaves. Frequency increased 3x since 1980, particularly in southern regions.</p>
+          <span class="trend up">More Frequent</span>
+        </div>
+        <div class="data-card">
+          <h4>Wildfires</h4>
+          <div class="metric">+180%</div>
+          <p>Increase in wildfire occurrences. Drier conditions and higher temperatures extending fire season by 2 months.</p>
+          <span class="trend up">Rising Risk</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- Contact Form Section -->
-        <section class="container section">
-            <h2>📬 Submit Climate Data</h2>
-            <p style="text-align: center; margin-bottom: 30px;">
-                Have climate data to contribute? Send us your research!
-            </p>
-            
-            <form id="dataForm">
-                <input type="text" name="name" placeholder="Your Name" required />
-                <input type="email" name="email" placeholder="Your Email" required />
-                <textarea name="message" placeholder="Your Climate Data or Message" rows="5" required></textarea>
-                <button type="submit">Submit Data</button>
-            </form>
-            
-            <div id="statusMessage" style="margin-top: 15px; padding: 12px; border-radius: 6px; display: none;"></div>
-        </section>
-    </main>
+  <section class="country-section" id="pakistan">
+    <div class="container">
+      <div class="country-header">
+        <h3>Pakistan</h3>
+        <p>Climate Data and Environmental Indicators | 1960-2024</p>
+      </div>
+      <div class="data-grid">
+        <div class="data-card">
+          <h4>Temperature</h4>
+          <div class="metric">+1.5°C</div>
+          <p>Average temperature rise since 1960. Urban heat islands in Karachi and Lahore showing +2.5°C increases.</p>
+          <span class="trend up">Rising</span>
+        </div>
+        <div class="data-card">
+          <h4>Precipitation</h4>
+          <div class="metric">+8%</div>
+          <p>Overall increase but highly erratic. Monsoon intensity up 25%, causing severe flooding events.</p>
+          <span class="trend up">Variable</span>
+        </div>
+        <div class="data-card">
+          <h4>Wind Pressure</h4>
+          <div class="metric">1010 hPa</div>
+          <p>Average pressure with seasonal monsoon variations. Wind patterns shifting, affecting agricultural cycles.</p>
+          <span class="trend stable">Shifting</span>
+        </div>
+        <div class="data-card">
+          <h4>Atmospheric Gases</h4>
+          <div class="metric">418 ppm</div>
+          <p>CO₂ levels rising. Industrial emissions and vehicle pollution contributing to urban air quality crisis.</p>
+          <span class="trend up">Increasing</span>
+        </div>
+        <div class="data-card">
+          <h4>Cryosphere</h4>
+          <div class="metric">-35%</div>
+          <p>Glacier retreat in Karakoram and Himalayas. Over 7,000 glaciers at risk, threatening Indus River system.</p>
+          <span class="trend down">Critical</span>
+        </div>
+        <div class="data-card">
+          <h4>Soil Quality</h4>
+          <div class="metric">-22%</div>
+          <p>Soil degradation from salinity and erosion. 11 million hectares affected by waterlogging and salinity.</p>
+          <span class="trend down">Degrading</span>
+        </div>
+        <div class="data-card">
+          <h4>Water Stress</h4>
+          <div class="metric">1000m³</div>
+          <p>Water availability per capita dropped to critical levels. Among top 10 most water-stressed countries.</p>
+          <span class="trend down">Critical</span>
+        </div>
+        <div class="data-card">
+          <h4>El Niño / La Niña</h4>
+          <div class="metric">Severe</div>
+          <p>2022 floods linked to La Niña. 33 million affected, $30 billion in damages. Monsoon disruption intensifying.</p>
+          <span class="trend up">Extreme Events</span>
+        </div>
+        <div class="data-card">
+          <h4>Heatwaves</h4>
+          <div class="metric">+52°C</div>
+          <p>Record temperatures in Sindh and Punjab. Heatwave duration extended by 3-4 weeks annually.</p>
+          <span class="trend up">Deadly</span>
+        </div>
+        <div class="data-card">
+          <h4>Wildfires</h4>
+          <div class="metric">+150%</div>
+          <p>Forest fires in northern mountains increasing. Agricultural burning contributing to air pollution crisis.</p>
+          <span class="trend up">Rising</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        const form = document.getElementById('dataForm');
-        const status = document.getElementById('statusMessage');
+  <section class="country-section" id="india">
+    <div class="container">
+      <div class="country-header">
+        <h3>India</h3>
+        <p>Climate Data and Environmental Indicators | 1960-2024</p>
+      </div>
+      <div class="data-grid">
+        <div class="data-card">
+          <h4>Temperature</h4>
+          <div class="metric">+1.3°C</div>
+          <p>Average temperature increase. Himalayan region warming 2x faster than global average.</p>
+          <span class="trend up">Rising</span>
+        </div>
+        <div class="data-card">
+          <h4>Precipitation</h4>
+          <div class="metric">+10%</div>
+          <p>Monsoon rainfall increased but more erratic. Extreme rainfall events up 75% since 1950.</p>
+          <span class="trend up">Erratic</span>
+        </div>
+        <div class="data-card">
+          <h4>Wind Patterns</h4>
+          <div class="metric">Variable</div>
+          <p>Monsoon wind strength fluctuating. Cyclone intensity in Bay of Bengal and Arabian Sea increasing.</p>
+          <span class="trend up">Intensifying</span>
+        </div>
+        <div class="data-card">
+          <h4>Atmospheric Gases</h4>
+          <div class="metric">420 ppm</div>
+          <p>CO₂ concentration. India is 3rd largest emitter globally. Air quality crisis in major cities.</p>
+          <span class="trend up">High</span>
+        </div>
+        <div class="data-card">
+          <h4>Cryosphere</h4>
+          <div class="metric">-40%</div>
+          <p>Himalayan glaciers retreating rapidly. Gangotri glacier retreating 20-30m/year. Water security threat.</p>
+          <span class="trend down">Alarmingly</span>
+        </div>
+        <div class="data-card">
+          <h4>Soil Health</h4>
+          <div class="metric">-28%</div>
+          <p>Soil degradation affecting 147 million hectares. Loss of organic carbon and nutrient depletion.</p>
+          <span class="trend down">Degrading</span>
+        </div>
+        <div class="data-card">
+          <h4>Water Resources</h4>
+          <div class="metric">-45%</div>
+          <p>Groundwater depletion in Punjab, Haryana, Rajasthan. 21 cities to run out of groundwater by 2030.</p>
+          <span class="trend down">Crisis</span>
+        </div>
+        <div class="data-card">
+          <h4>El Niño / La Niña</h4>
+          <div class="metric">Strong</div>
+          <p>Monsoon failures linked to El Niño. 2023 El Niño caused 6% rainfall deficit, affecting agriculture.</p>
+          <span class="trend up">Impact Growing</span>
+        </div>
+        <div class="data-card">
+          <h4>Heatwaves</h4>
+          <div class="metric">+50°C</div>
+          <p>Heatwave frequency up 8x since 1960. 2022 saw earliest and longest heatwave on record.</p>
+          <span class="trend up">Extreme</span>
+        </div>
+        <div class="data-card">
+          <h4>Wildfires</h4>
+          <div class="metric">+200%</div>
+          <p>Forest fires in Himalayas and Western Ghats increasing. Agricultural stubble burning causing air crisis.</p>
+          <span class="trend up">Severe</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-            
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                body: formData
-            });
+  <section class="container" id="charts">
+    <div class="section-header">
+      <span class="tag">Data Visualization</span>
+      <h2>Climate Trends Analysis</h2>
+      <p>Comparative climate data visualization for South Asia (1960-2024)</p>
+    </div>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Temperature Trends</h3>
+        <p style="color: var(--gray); font-size: 0.9rem;">Average temperature anomaly (°C) - Three Countries</p>
+        <div class="chart-wrapper">
+          <canvas id="tempChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Precipitation Patterns</h3>
+        <p style="color: var(--gray); font-size: 0.9rem;">Annual precipitation change (%) from baseline</p>
+        <div class="chart-wrapper">
+          <canvas id="precipChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Glacier Mass Balance</h3>
+        <p style="color: var(--gray); font-size: 0.9rem;">Glacier mass loss (gigatons per year)</p>
+        <div class="chart-wrapper">
+          <canvas id="glacierChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Water Stress Index</h3>
+        <p style="color: var(--gray); font-size: 0.9rem;">Water availability per capita (cubic meters)</p>
+        <div class="chart-wrapper">
+          <canvas id="waterChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            if (response.ok) {
-                status.className = 'success';
-                status.style.background = '#d4edda';
-                status.style.color = '#155724';
-                status.style.display = 'block';
-                status.innerText = "✅ Data saved successfully to Cloudflare KV Binding!";
-                form.reset();
-            } else {
-                status.className = 'error';
-                status.style.background = '#f8d7da';
-                status.style.color = '#721c24';
-                status.style.display = 'block';
-                status.innerText = "❌ Error saving data. Please try again.";
-            }
-        });
-    </script>
+  <section class="container" id="maps">
+    <div class="section-header">
+      <span class="tag">Geographic Visualization</span>
+      <h2>Interactive Climate Maps</h2>
+      <p>Spatial distribution of climate indicators across South Asia</p>
+    </div>
+    <div class="map-container">
+      <div id="worldMap"></div>
+    </div>
+  </section>
+
+  <section class="agencies-section" id="agencies">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag">Data Sources</span>
+        <h2>International Climate Agencies</h2>
+        <p>Leading organizations providing climate data and research</p>
+      </div>
+      <div class="agencies-grid">
+        <div class="agency-card">
+          <span class="acronym">IPCC</span>
+          <h4>Intergovernmental Panel on Climate Change</h4>
+          <p>UN body assessing climate science. Provides comprehensive assessment reports on climate change impacts, adaptation, and mitigation. Primary source for global climate policy.</p>
+        </div>
+        <div class="agency-card">
+          <span class="acronym">NOAA</span>
+          <h4>National Oceanic and Atmospheric Administration</h4>
+          <p>U.S. agency monitoring Earth's atmosphere and oceans. Provides critical climate data, weather forecasting, and ocean observations globally.</p>
+        </div>
+        <div class="agency-card">
+          <span class="acronym">NASA</span>
+          <h4>National Aeronautics and Space Administration</h4>
+          <p>Space agency monitoring Earth's climate from satellites. Tracks temperature, sea level, ice sheets, and atmospheric composition with precision.</p>
+        </div>
+        <div class="agency-card">
+          <span class="acronym">ISRO</span>
+          <h4>Indian Space Research Organisation</h4>
+          <p>India's space agency. Operates earth observation satellites monitoring monsoon, agriculture, water resources, and disaster management.</p>
+        </div>
+        <div class="agency-card">
+          <span class="acronym">CNSA</span>
+          <h4>China National Space Administration</h4>
+          <p>Chinese space agency. Operates Fengyun meteorological satellites providing regional climate monitoring for Asia.</p>
+        </div>
+        <div class="agency-card">
+          <span class="acronym">ESA</span>
+          <h4>European Space Agency</h4>
+          <p>European space agency. Climate Change Initiative providing long-term satellite data records for essential climate variables.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container" id="resources">
+    <div class="section-header">
+      <span class="tag">Data and Research</span>
+      <h2>Climate Data Resources</h2>
+      <p>Open access platforms and databases for climate research</p>
+    </div>
+    <div class="resources-grid">
+      <div class="resource-card">
+        <span class="type">Database</span>
+        <h4>Climate Data Guide</h4>
+        <p>Comprehensive guide to climate datasets, tools, and methodologies. Curated by NCAR and international partners.</p>
+        <a href="https://climatedataguide.ucar.edu" target="_blank" style="color: var(--sky); font-weight: 600;">Visit Resource</a>
+      </div>
+      <div class="resource-card">
+        <span class="type">Platform</span>
+        <h4>Climate Watch</h4>
+        <p>World Resources Institute platform tracking climate commitments, emissions, and progress toward Paris Agreement goals.</p>
+        <a href="https://www.climatewatchdata.org" target="_blank" style="color: var(--sky); font-weight: 600;">Visit Resource</a>
+      </div>
+      <div class="resource-card">
+        <span class="type">Official</span>
+        <h4>UNFCCC GHG Inventory</h4>
+        <p>United Nations greenhouse gas inventory data. National emissions reports and climate action tracking.</p>
+        <a href="https://unfccc.int/ghg-inventories" target="_blank" style="color: var(--sky); font-weight: 600;">Visit Resource</a>
+      </div>
+      <div class="resource-card">
+        <span class="type">Economic</span>
+        <h4>IMF Climate Data</h4>
+        <p>International Monetary Fund climate macroeconomic data. Carbon pricing, climate finance, and economic impacts.</p>
+        <a href="https://www.imf.org/climate" target="_blank" style="color: var(--sky); font-weight: 600;">Visit Resource</a>
+      </div>
+      <div class="resource-card">
+        <span class="type">Portal</span>
+        <h4>World Bank Climate Portal</h4>
+        <p>Climate Change Knowledge Portal with country-specific data, projections, and vulnerability assessments.</p>
+        <a href="https://climateknowledgeportal.worldbank.org" target="_blank" style="color: var(--sky); font-weight: 600;">Visit Resource</a>
+      </div>
+      <div class="resource-card">
+        <span class="type">Government</span>
+        <h4>National Climate Portals</h4>
+        <p>Government climate data portals for Afghanistan, Pakistan, and India. National communications and adaptation plans.</p>
+        <a href="#" style="color: var(--sky); font-weight: 600;">View Portals</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="section-header">
+      <span class="tag">Get In Touch</span>
+      <h2>Submit Climate Data</h2>
+      <p>Have climate data to contribute? Send us your research!</p>
+    </div>
+    
+    <form id="dataForm">
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" placeholder="Your full name" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Your Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+      </div>
+      <div class="form-group">
+        <label for="message">Your Climate Data or Message</label>
+        <textarea id="message" name="message" placeholder="Share your climate research, data, or questions..." required></textarea>
+      </div>
+      <button type="submit">Submit Data</button>
+    </form>
+    
+    <div id="statusMessage" style="margin-top: 15px; padding: 12px; border-radius: 6px; display: none; text-align: center;"></div>
+  </section>
+
+  <footer>
+    <p style="font-size: 1.1rem; margin-bottom: 10px;">Built by @Akil Godara</p>
+    <p style="opacity: 0.7; font-size: 0.9rem;">© 2026 ClimatoKil - Data Sources: IPCC, NOAA, NASA, ISRO, World Bank</p>
+  </footer>
+
+  <script>
+    const years = ['1960','1970','1980','1990','2000','2010','2020','2024'];
+
+    new Chart(document.getElementById('tempChart'), {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [
+          { label: 'Afghanistan', data: [0, 0.3, 0.6, 0.9, 1.1, 1.4, 1.7, 1.8], borderColor: '#c17a5a', backgroundColor: 'rgba(193, 122, 90, 0.1)', fill: true, tension: 0.4 },
+          { label: 'Pakistan', data: [0, 0.2, 0.5, 0.7, 0.9, 1.1, 1.4, 1.5], borderColor: '#5b9ea6', backgroundColor: 'rgba(91, 158, 166, 0.1)', fill: true, tension: 0.4 },
+          { label: 'India', data: [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.3], borderColor: '#7a9e7e', backgroundColor: 'rgba(122, 158, 126, 0.1)', fill: true, tension: 0.4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          y: { beginAtZero: false, title: { display: true, text: 'Temperature Anomaly (°C)' } },
+          x: { title: { display: true, text: 'Year' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('precipChart'), {
+      type: 'bar',
+      data: {
+        labels: years,
+        datasets: [
+          { label: 'Afghanistan', data: [0, -2, -5, -7, -9, -10, -11, -12], backgroundColor: 'rgba(193, 122, 90, 0.7)' },
+          { label: 'Pakistan', data: [0, 1, 2, 3, 4, 6, 7, 8], backgroundColor: 'rgba(91, 158, 166, 0.7)' },
+          { label: 'India', data: [0, 2, 3, 5, 6, 8, 9, 10], backgroundColor: 'rgba(122, 158, 126, 0.7)' }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          y: { title: { display: true, text: 'Change from Baseline (%)' } },
+          x: { title: { display: true, text: 'Year' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('glacierChart'), {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [
+          { label: 'Afghanistan', data: [0, -5, -12, -18, -22, -25, -28, -30], borderColor: '#c17a5a', tension: 0.4 },
+          { label: 'Pakistan', data: [0, -8, -15, -22, -28, -32, -35, -38], borderColor: '#5b9ea6', tension: 0.4 },
+          { label: 'India', data: [0, -10, -18, -25, -32, -38, -42, -45], borderColor: '#7a9e7e', tension: 0.4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { y: { title: { display: true, text: 'Mass Loss (%)' }, beginAtZero: false } }
+      }
+    });
+
+    new Chart(document.getElementById('waterChart'), {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [
+          { label: 'Afghanistan', data: [3500, 3200, 2800, 2400, 2000, 1600, 1200, 1000], borderColor: '#d4a574', backgroundColor: 'rgba(212, 165, 116, 0.1)', fill: true, tension: 0.4 },
+          { label: 'Pakistan', data: [5000, 4200, 3500, 2800, 2200, 1600, 1200, 1000], borderColor: '#c17a5a', backgroundColor: 'rgba(193, 122, 90, 0.1)', fill: true, tension: 0.4 },
+          { label: 'India', data: [4000, 3500, 3000, 2500, 2000, 1600, 1300, 1100], borderColor: '#5b9ea6', backgroundColor: 'rgba(91, 158, 166, 0.1)', fill: true, tension: 0.4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { y: { title: { display: true, text: 'm³ per capita' }, beginAtZero: false } }
+      }
+    });
+
+    const map = L.map('worldMap').setView([30, 70], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const afghanistan = L.polygon([[38.5, 60.5], [38.5, 75], [29.5, 75], [29.5, 60.5]], {
+      color: '#c17a5a', fillColor: '#c17a5a', fillOpacity: 0.4, weight: 2
+    }).addTo(map).bindPopup('<b>Afghanistan</b><br>Temp: +1.8°C<br>Water: -30%');
+
+    const pakistan = L.polygon([[37.5, 61], [37.5, 77.5], [24, 77.5], [24, 61]], {
+      color: '#5b9ea6', fillColor: '#5b9ea6', fillOpacity: 0.4, weight: 2
+    }).addTo(map).bindPopup('<b>Pakistan</b><br>Temp: +1.5°C<br>Glaciers: -35%');
+
+    const india = L.polygon([[37.5, 68], [37.5, 97.5], [6.5, 97.5], [6.5, 68]], {
+      color: '#7a9e7e', fillColor: '#7a9e7e', fillOpacity: 0.4, weight: 2
+    }).addTo(map).bindPopup('<b>India</b><br>Temp: +1.3°C<br>Heatwaves: +8x');
+
+    const group = new L.featureGroup([afghanistan, pakistan, india]);
+    map.fitBounds(group.getBounds().pad(0.2));
+
+    const form = document.getElementById('dataForm');
+    const status = document.getElementById('statusMessage');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        status.style.background = '#d4edda';
+        status.style.color: '#155724';
+        status.style.display = 'block';
+        status.innerText = "Data saved successfully to Cloudflare KV Binding!";
+        form.reset();
+      } else {
+        status.style.background = '#f8d7da';
+        status.style.color = '#721c24';
+        status.style.display = 'block';
+        status.innerText = "Error saving data. Please try again.";
+      }
+    });
+  </script>
 </body>
 </html>
