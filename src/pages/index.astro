@@ -1,0 +1,141 @@
+---
+// This is the Frontend (Astro + TypeScript)
+const title = "ClimatoKil - South Asia Climate Archive";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Climate data for South Asia" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{title}</title>
+		<style>
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				margin: 0;
+				padding: 0;
+				background: #f8f9fa;
+				color: #1a1a2e;
+			}
+			header {
+				background: linear-gradient(135deg, #0a4d68 0%, #088395 100%);
+				color: white;
+				padding: 40px 20px;
+				text-align: center;
+			}
+			h1 {
+				margin: 0;
+				font-size: 2.5rem;
+			}
+			main {
+				max-width: 800px;
+				margin: 40px auto;
+				padding: 0 20px;
+			}
+			.card {
+				background: white;
+				padding: 30px;
+				border-radius: 12px;
+				box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+				margin-bottom: 30px;
+			}
+			form {
+				display: flex;
+				flex-direction: column;
+				gap: 15px;
+			}
+			input, textarea {
+				padding: 12px;
+				border: 1px solid #e9ecef;
+				border-radius: 6px;
+				font-size: 1rem;
+				font-family: inherit;
+			}
+			button {
+				padding: 14px;
+				background: #05bfdb;
+				color: white;
+				border: none;
+				border-radius: 6px;
+				font-size: 1rem;
+				font-weight: 600;
+				cursor: pointer;
+				transition: background 0.2s;
+			}
+			button:hover {
+				background: #088395;
+			}
+			#statusMessage {
+				margin-top: 15px;
+				padding: 12px;
+				border-radius: 6px;
+				display: none;
+			}
+			.success {
+				background: #d4edda;
+				color: #155724;
+				display: block;
+			}
+			.error {
+				background: #f8d7da;
+				color: #721c24;
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>🌍 ClimatoKil</h1>
+			<p>South Asia Climate Data Archive</p>
+		</header>
+
+		<main>
+			<div class="card">
+				<h2>Welcome to ClimatoKil</h2>
+				<p>This site is built with <strong>Astro</strong> and <strong>TypeScript</strong>, powered by <strong>Cloudflare Pages</strong> and <strong>Bindings</strong>.</p>
+				<p>We track climate change across Afghanistan, Pakistan, and India from 1960 to present.</p>
+			</div>
+
+			<div class="card">
+				<h3>📬 Submit Climate Data</h3>
+				<p>Have climate data to contribute? Send us your research!</p>
+				
+				<form id="dataForm">
+					<input type="text" name="name" placeholder="Your Name" required />
+					<input type="email" name="email" placeholder="Your Email" required />
+					<textarea name="message" placeholder="Your Climate Data or Message" rows="5" required></textarea>
+					<button type="submit">Submit Data</button>
+				</form>
+				
+				<div id="statusMessage"></div>
+			</div>
+		</main>
+
+		<script>
+			const form = document.getElementById('dataForm');
+			const status = document.getElementById('statusMessage');
+
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				const formData = new FormData(form);
+				
+				// Send to our TypeScript Backend Function
+				const response = await fetch('/api/contact', {
+					method: 'POST',
+					body: formData
+				});
+
+				if (response.ok) {
+					status.className = 'success';
+					status.innerText = "✅ Data saved successfully to Cloudflare KV Binding!";
+					form.reset();
+				} else {
+					status.className = 'error';
+					status.innerText = "❌ Error saving data. Please try again.";
+				}
+			});
+		</script>
+	</body>
+</html>
