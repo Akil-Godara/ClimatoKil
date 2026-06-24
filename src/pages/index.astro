@@ -1,141 +1,253 @@
 ---
-// This is the Frontend (Astro + TypeScript)
-const title = "ClimatoKil - South Asia Climate Archive";
+// ClimatoKil - Full Website with all sections
+const title = "ClimatoKil - South Asia Climate Data Archive";
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Climate data for South Asia" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<title>{title}</title>
-		<style>
-			body {
-				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-				margin: 0;
-				padding: 0;
-				background: #f8f9fa;
-				color: #1a1a2e;
-			}
-			header {
-				background: linear-gradient(135deg, #0a4d68 0%, #088395 100%);
-				color: white;
-				padding: 40px 20px;
-				text-align: center;
-			}
-			h1 {
-				margin: 0;
-				font-size: 2.5rem;
-			}
-			main {
-				max-width: 800px;
-				margin: 40px auto;
-				padding: 0 20px;
-			}
-			.card {
-				background: white;
-				padding: 30px;
-				border-radius: 12px;
-				box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-				margin-bottom: 30px;
-			}
-			form {
-				display: flex;
-				flex-direction: column;
-				gap: 15px;
-			}
-			input, textarea {
-				padding: 12px;
-				border: 1px solid #e9ecef;
-				border-radius: 6px;
-				font-size: 1rem;
-				font-family: inherit;
-			}
-			button {
-				padding: 14px;
-				background: #05bfdb;
-				color: white;
-				border: none;
-				border-radius: 6px;
-				font-size: 1rem;
-				font-weight: 600;
-				cursor: pointer;
-				transition: background 0.2s;
-			}
-			button:hover {
-				background: #088395;
-			}
-			#statusMessage {
-				margin-top: 15px;
-				padding: 12px;
-				border-radius: 6px;
-				display: none;
-			}
-			.success {
-				background: #d4edda;
-				color: #155724;
-				display: block;
-			}
-			.error {
-				background: #f8d7da;
-				color: #721c24;
-				display: block;
-			}
-		</style>
-	</head>
-	<body>
-		<header>
-			<h1>🌍 ClimatoKil</h1>
-			<p>South Asia Climate Data Archive</p>
-		</header>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <style>
+        /* Add all your CSS styles here */
+        :root {
+            --ocean: #0a4d68;
+            --ocean-deep: #053547;
+            --sky: #088395;
+            --ice: #05bfdb;
+            --warm: #e63946;
+            --earth: #2a9d8f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+        }
+        header {
+            background: linear-gradient(135deg, var(--ocean-deep), var(--sky));
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        header h1 { font-size: 3rem; margin-bottom: 10px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .section { margin-bottom: 60px; }
+        .section h2 { 
+            font-size: 2.5rem; 
+            color: var(--ocean-deep);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .country-header {
+            background: linear-gradient(135deg, var(--ocean), var(--sky));
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .data-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--ice);
+        }
+        .data-card h3 { color: var(--ocean-deep); margin-bottom: 10px; }
+        .metric { 
+            font-size: 2rem; 
+            font-weight: bold; 
+            color: var(--warm);
+            margin: 10px 0;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        button {
+            background: var(--ice);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover { background: var(--sky); }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌍 ClimatoKil</h1>
+        <p>South Asia Climate Data Archive</p>
+    </header>
 
-		<main>
-			<div class="card">
-				<h2>Welcome to ClimatoKil</h2>
-				<p>This site is built with <strong>Astro</strong> and <strong>TypeScript</strong>, powered by <strong>Cloudflare Pages</strong> and <strong>Bindings</strong>.</p>
-				<p>We track climate change across Afghanistan, Pakistan, and India from 1960 to present.</p>
-			</div>
+    <main>
+        <!-- Introduction Section -->
+        <section class="container section">
+            <h2>Understanding Climate Change in South Asia</h2>
+            <p style="text-align: center; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+                Comprehensive climate data visualization and analysis for Afghanistan, Pakistan, and India. 
+                Tracking temperature, precipitation, atmospheric changes, and environmental transformations from 1960 to present.
+            </p>
+        </section>
 
-			<div class="card">
-				<h3>📬 Submit Climate Data</h3>
-				<p>Have climate data to contribute? Send us your research!</p>
-				
-				<form id="dataForm">
-					<input type="text" name="name" placeholder="Your Name" required />
-					<input type="email" name="email" placeholder="Your Email" required />
-					<textarea name="message" placeholder="Your Climate Data or Message" rows="5" required></textarea>
-					<button type="submit">Submit Data</button>
-				</form>
-				
-				<div id="statusMessage"></div>
-			</div>
-		</main>
+        <!-- Afghanistan Section -->
+        <section class="container section">
+            <div class="country-header">
+                <h2>🇦🇫 Afghanistan</h2>
+                <p>Climate Data & Environmental Indicators | 1960-2024</p>
+            </div>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>🌡️ Temperature</h3>
+                    <div class="metric">+1.8°C</div>
+                    <p>Average temperature increase since 1960. Warming rate exceeds global average.</p>
+                </div>
+                <div class="data-card">
+                    <h3>🌧️ Precipitation</h3>
+                    <div class="metric">-12%</div>
+                    <p>Overall decrease in annual precipitation with increased variability.</p>
+                </div>
+                <div class="data-card">
+                    <h3>🏔️ Cryosphere</h3>
+                    <div class="metric">-25%</div>
+                    <p>Glacier mass loss in Hindu Kush mountains.</p>
+                </div>
+                <div class="data-card">
+                    <h3>💧 Water Resources</h3>
+                    <div class="metric">-30%</div>
+                    <p>Reduction in water availability per capita.</p>
+                </div>
+            </div>
+        </section>
 
-		<script>
-			const form = document.getElementById('dataForm');
-			const status = document.getElementById('statusMessage');
+        <!-- Pakistan Section -->
+        <section class="container section">
+            <div class="country-header">
+                <h2>🇵 Pakistan</h2>
+                <p>Climate Data & Environmental Indicators | 1960-2024</p>
+            </div>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>🌡️ Temperature</h3>
+                    <div class="metric">+1.5°C</div>
+                    <p>Average temperature rise since 1960. Urban heat islands showing +2.5°C.</p>
+                </div>
+                <div class="data-card">
+                    <h3>🌧️ Precipitation</h3>
+                    <div class="metric">+8%</div>
+                    <p>Overall increase but highly erratic. Monsoon intensity up 25%.</p>
+                </div>
+                <div class="data-card">
+                    <h3>🏔️ Cryosphere</h3>
+                    <div class="metric">-35%</div>
+                    <p>Glacier retreat in Karakoram and Himalayas.</p>
+                </div>
+                <div class="data-card">
+                    <h3>🔥 Heatwaves</h3>
+                    <div class="metric">+52°C</div>
+                    <p>Record temperatures in Sindh and Punjab.</p>
+                </div>
+            </div>
+        </section>
 
-			form.addEventListener('submit', async (e) => {
-				e.preventDefault();
-				const formData = new FormData(form);
-				
-				// Send to our TypeScript Backend Function
-				const response = await fetch('/api/contact', {
-					method: 'POST',
-					body: formData
-				});
+        <!-- India Section -->
+        <section class="container section">
+            <div class="country-header">
+                <h2>🇮🇳 India</h2>
+                <p>Climate Data & Environmental Indicators | 1960-2024</p>
+            </div>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>🌡️ Temperature</h3>
+                    <div class="metric">+1.3°C</div>
+                    <p>Average temperature increase. Himalayan region warming 2x faster.</p>
+                </div>
+                <div class="data-card">
+                    <h3>🌧️ Precipitation</h3>
+                    <div class="metric">+10%</div>
+                    <p>Monsoon rainfall increased but more erratic.</p>
+                </div>
+                <div class="data-card">
+                    <h3>🏔️ Cryosphere</h3>
+                    <div class="metric">-40%</div>
+                    <p>Himalayan glaciers retreating rapidly.</p>
+                </div>
+                <div class="data-card">
+                    <h3>💧 Water Resources</h3>
+                    <div class="metric">-45%</div>
+                    <p>Groundwater depletion in Punjab, Haryana, Rajasthan.</p>
+                </div>
+            </div>
+        </section>
 
-				if (response.ok) {
-					status.className = 'success';
-					status.innerText = "✅ Data saved successfully to Cloudflare KV Binding!";
-					form.reset();
-				} else {
-					status.className = 'error';
-					status.innerText = "❌ Error saving data. Please try again.";
-				}
-			});
-		</script>
-	</body>
+        <!-- Contact Form Section -->
+        <section class="container section">
+            <h2>📬 Submit Climate Data</h2>
+            <p style="text-align: center; margin-bottom: 30px;">
+                Have climate data to contribute? Send us your research!
+            </p>
+            
+            <form id="dataForm">
+                <input type="text" name="name" placeholder="Your Name" required />
+                <input type="email" name="email" placeholder="Your Email" required />
+                <textarea name="message" placeholder="Your Climate Data or Message" rows="5" required></textarea>
+                <button type="submit">Submit Data</button>
+            </form>
+            
+            <div id="statusMessage" style="margin-top: 15px; padding: 12px; border-radius: 6px; display: none;"></div>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById('dataForm');
+        const status = document.getElementById('statusMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                status.className = 'success';
+                status.style.background = '#d4edda';
+                status.style.color = '#155724';
+                status.style.display = 'block';
+                status.innerText = "✅ Data saved successfully to Cloudflare KV Binding!";
+                form.reset();
+            } else {
+                status.className = 'error';
+                status.style.background = '#f8d7da';
+                status.style.color = '#721c24';
+                status.style.display = 'block';
+                status.innerText = "❌ Error saving data. Please try again.";
+            }
+        });
+    </script>
+</body>
 </html>
