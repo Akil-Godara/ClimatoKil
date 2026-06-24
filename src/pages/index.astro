@@ -762,10 +762,31 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     <div class="section-header">
       <span class="tag">Geographic Visualization</span>
       <h2>Interactive Climate Maps</h2>
-      <p>Spatial distribution of climate indicators across South Asia</p>
+      <p>Climate indicators across Afghanistan, Pakistan, and India</p>
     </div>
     <div class="map-container">
-      <div id="worldMap"></div>
+      <div id="southAsiaMap" style="height: 600px; border-radius: 8px;"></div>
+      <div style="margin-top: 20px; padding: 20px; background: var(--cream); border-radius: 8px;">
+        <h4 style="margin-bottom: 15px; color: var(--ocean-deep);">Climate Data Layers:</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+          <div style="padding: 10px; background: white; border-radius: 6px; border-left: 4px solid #c17a5a;">
+            <strong>Temperature Rise</strong><br/>
+            <small style="color: var(--gray);">Afghanistan: +1.8°C</small>
+          </div>
+          <div style="padding: 10px; background: white; border-radius: 6px; border-left: 4px solid #5b9ea6;">
+            <strong>Precipitation</strong><br/>
+            <small style="color: var(--gray);">Pakistan: +8% (erratic)</small>
+          </div>
+          <div style="padding: 10px; background: white; border-radius: 6px; border-left: 4px solid #7a9e7e;">
+            <strong>Glacier Loss</strong><br/>
+            <small style="color: var(--gray);">India: -40%</small>
+          </div>
+          <div style="padding: 10px; background: white; border-radius: 6px; border-left: 4px solid #d4a574;">
+            <strong>Water Stress</strong><br/>
+            <small style="color: var(--gray);">Regional crisis</small>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -969,25 +990,116 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
       }
     });
 
-    const map = L.map('worldMap').setView([30, 70], 4);
+    // Initialize South Asia focused map
+    const climateMap = L.map('southAsiaMap').setView([32, 72], 5);
+
+    // Add OpenStreetMap base layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+      attribution: '© OpenStreetMap contributors | Climate Data: IPCC, NASA, NOAA',
+      maxZoom: 8
+    }).addTo(climateMap);
 
-    const afghanistan = L.polygon([[38.5, 60.5], [38.5, 75], [29.5, 75], [29.5, 60.5]], {
-      color: '#c17a5a', fillColor: '#c17a5a', fillOpacity: 0.4, weight: 2
-    }).addTo(map).bindPopup('<b>Afghanistan</b><br>Temp: +1.8°C<br>Water: -30%');
+    // Afghanistan with detailed climate data
+    const afghanistanLayer = L.polygon([
+      [38.48333, 60.478473], [38.5, 74.889758], 
+      [29.377479, 74.889758], [29.35, 60.517421]
+    ], {
+      color: '#c17a5a',
+      fillColor: '#c17a5a',
+      fillOpacity: 0.35,
+      weight: 2,
+      dashArray: '5, 5'
+    }).addTo(climateMap).bindPopup(`
+      <div style="font-family: sans-serif; padding: 5px;">
+        <h3 style="margin: 0 0 10px 0; color: #c17a5a;">Afghanistan</h3>
+        <strong>Temperature:</strong> +1.8°C<br/>
+        <strong>Precipitation:</strong> -12%<br/>
+        <strong>Glaciers:</strong> -25%<br/>
+        <strong>Water:</strong> -30%<br/>
+        <strong>Heatwaves:</strong> +45°C max
+      </div>
+    `);
 
-    const pakistan = L.polygon([[37.5, 61], [37.5, 77.5], [24, 77.5], [24, 61]], {
-      color: '#5b9ea6', fillColor: '#5b9ea6', fillOpacity: 0.4, weight: 2
-    }).addTo(map).bindPopup('<b>Pakistan</b><br>Temp: +1.5°C<br>Glaciers: -35%');
+    // Pakistan with detailed climate data
+    const pakistanLayer = L.polygon([
+      [37.097421, 60.874208], [37.1, 77.837452],
+      [23.786553, 77.837452], [23.8, 60.874208]
+    ], {
+      color: '#5b9ea6',
+      fillColor: '#5b9ea6',
+      fillOpacity: 0.35,
+      weight: 2,
+      dashArray: '5, 5'
+    }).addTo(climateMap).bindPopup(`
+      <div style="font-family: sans-serif; padding: 5px;">
+        <h3 style="margin: 0 0 10px 0; color: #5b9ea6;">Pakistan</h3>
+        <strong>Temperature:</strong> +1.5°C<br/>
+        <strong>Precipitation:</strong> +8% (erratic)<br/>
+        <strong>Glaciers:</strong> -35%<br/>
+        <strong>Water Stress:</strong> 1000m³/capita<br/>
+        <strong>Heatwaves:</strong> +52°C max
+      </div>
+    `);
 
-    const india = L.polygon([[37.5, 68], [37.5, 97.5], [6.5, 97.5], [6.5, 68]], {
-      color: '#7a9e7e', fillColor: '#7a9e7e', fillOpacity: 0.4, weight: 2
-    }).addTo(map).bindPopup('<b>India</b><br>Temp: +1.3°C<br>Heatwaves: +8x');
+    // India with detailed climate data
+    const indiaLayer = L.polygon([
+      [35.504223, 68.176645], [35.5, 97.416259],
+      [6.462699, 97.416259], [6.5, 68.176645]
+    ], {
+      color: '#7a9e7e',
+      fillColor: '#7a9e7e',
+      fillOpacity: 0.35,
+      weight: 2,
+      dashArray: '5, 5'
+    }).addTo(climateMap).bindPopup(`
+      <div style="font-family: sans-serif; padding: 5px;">
+        <h3 style="margin: 0 0 10px 0; color: #7a9e7e;">India</h3>
+        <strong>Temperature:</strong> +1.3°C<br/>
+        <strong>Precipitation:</strong> +10% (erratic)<br/>
+        <strong>Glaciers:</strong> -40%<br/>
+        <strong>Water:</strong> -45%<br/>
+        <strong>Heatwaves:</strong> +50°C max
+      </div>
+    `);
 
-    const group = new L.featureGroup([afghanistan, pakistan, india]);
-    map.fitBounds(group.getBounds().pad(0.2));
+    // Add major cities with markers
+    const cities = [
+      { name: 'Kabul', coords: [34.5553, 69.2075], country: 'Afghanistan', data: 'Temp: +1.8°C' },
+      { name: 'Kandahar', coords: [31.6289, 65.7372], country: 'Afghanistan', data: 'Drought risk' },
+      { name: 'Islamabad', coords: [33.6844, 73.0479], country: 'Pakistan', data: 'Floods +25%' },
+      { name: 'Karachi', coords: [24.8607, 67.0011], country: 'Pakistan', data: 'Heat: +2.5°C' },
+      { name: 'Lahore', coords: [31.5204, 74.3587], country: 'Pakistan', data: 'Air crisis' },
+      { name: 'New Delhi', coords: [28.7041, 77.1025], country: 'India', data: 'Heatwaves +8x' },
+      { name: 'Mumbai', coords: [19.0760, 72.8777], country: 'India', data: 'Sea level +3.4mm/yr' },
+      { name: 'Srinagar', coords: [34.0837, 74.7973], country: 'India', data: 'Glacier melt' }
+    ];
+
+    cities.forEach(city => {
+      const marker = L.circleMarker(city.coords, {
+      radius: 7,
+      fillColor: '#d4a574',
+      color: '#fff',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.8
+    }).addTo(climateMap).bindPopup(`
+      <div style="font-family: sans-serif; padding: 5px;">
+        <strong>${city.name}</strong><br/>
+        ${city.country}<br/>
+        <small style="color: #666;">${city.data}</small>
+      </div>
+    `);
+});
+
+    // Fit map to show all three countries
+    const southAsiaGroup = new L.featureGroup([afghanistanLayer, pakistanLayer, indiaLayer]);
+    climateMap.fitBounds(southAsiaGroup.getBounds().pad(0.15));
+
+    // Add scale control
+    L.control.scale({
+     imperial: false,
+     metric: true
+    }).addTo(climateMap);
 
     const form = document.getElementById('dataForm');
     const status = document.getElementById('statusMessage');
