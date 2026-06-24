@@ -885,7 +885,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
       <p>Have climate data to contribute? Send us your research!</p>
     </div>
     
-    <form action="https://formspree.io/f/xwvdvany" method="POST">
+    <form id="dataForm">
       <div class="form-group">
         <label for="name">Your Name</label>
         <input type="text" id="name" name="name" placeholder="Your full name" required />
@@ -1100,7 +1100,59 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
      imperial: false,
      metric: true
     }).addTo(climateMap);
+    
+    // Form Submission Handler
+    const form = document.getElementById('dataForm');
+    const status = document.getElementById('statusMessage');
 
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        
+        try {
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            body: formData
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+            status.style.background = '#d4edda';
+            status.style.color = '#155724';
+            status.style.padding = '12px';
+            status.style.borderRadius = '6px';
+            status.style.display = 'block';
+            status.style.textAlign = 'center';
+            status.style.marginTop = '15px';
+            status.innerText = '✅ Thank you! Your climate data has been submitted successfully.';
+            form.reset();
+            
+            setTimeout(() => {
+              status.style.display = 'none';
+            }, 5000);
+          } else {
+            throw new Error(result.error || 'Submission failed');
+          }
+          
+        } catch (error) {
+          status.style.background = '#f8d7da';
+          status.style.color = '#721c24';
+          status.style.padding = '12px';
+          status.style.borderRadius = '6px';
+          status.style.display = 'block';
+          status.style.textAlign = 'center';
+          status.style.marginTop = '15px';
+          status.innerText = '❌ Error: ' + error.message;
+          
+          setTimeout(() => {
+            status.style.display = 'none';
+          }, 5000);
+        }
+      });
+    }
   </script>
 </body>
 </html>
