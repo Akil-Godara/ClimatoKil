@@ -1003,7 +1003,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
 
       if (response.ok) {
         status.style.background = '#d4edda';
-        status.style.color: '#155724';
+        status.style.color = '#155724';  // ← FIXED: equals sign
         status.style.display = 'block';
         status.innerText = "Data saved successfully to Cloudflare KV Binding!";
         form.reset();
@@ -1012,7 +1012,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         status.style.color = '#721c24';
         status.style.display = 'block';
         status.innerText = "Error saving data. Please try again.";
-      }
+      } 
     });
   </script>
 </body>
