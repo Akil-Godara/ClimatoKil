@@ -3,7 +3,10 @@ cat > README.md << 'EOF'
 
 A comprehensive climate data visualization platform tracking environmental changes across **Afghanistan, Pakistan, and India** from 1960 to present.
 
-**Live Website:** [climatokil.pages.dev](https://climatokil.pages.dev/)
+---
+
+**Website:** 
+[climatokil.pages.dev](https://climatokil.pages.dev/)
 
 ---
 
