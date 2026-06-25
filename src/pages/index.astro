@@ -9,8 +9,10 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
 
-<!-- Leaflet CSS -->
+<!-- External Libraries -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
   :root {
@@ -910,13 +912,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     <p style="opacity: 0.7; font-size: 0.9rem;">© 2026 ClimatoKil - Data Sources: IPCC, NOAA, NASA, ISRO, World Bank</p>
   </footer>
 
-  <!-- External Libraries -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Main application script -->
-  <script is:inline>
+  <script>
     document.addEventListener('DOMContentLoaded', function() {
       const years = ['1960','1970','1980','1990','2000','2010','2020','2024'];
 
@@ -998,16 +994,13 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         }
       });
 
-      // Initialize South Asia focused map
       const climateMap = L.map('southAsiaMap').setView([32, 72], 5);
 
-      // Add OpenStreetMap base layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors | Climate Data: IPCC, NASA, NOAA',
         maxZoom: 8
       }).addTo(climateMap);
 
-      // Afghanistan with detailed climate data
       const afghanistanLayer = L.polygon([
         [38.48333, 60.478473], [38.5, 74.889758], 
         [29.377479, 74.889758], [29.35, 60.517421]
@@ -1028,7 +1021,6 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       `);
 
-      // Pakistan with detailed climate data
       const pakistanLayer = L.polygon([
         [37.097421, 60.874208], [37.1, 77.837452],
         [23.786553, 77.837452], [23.8, 60.874208]
@@ -1049,7 +1041,6 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       `);
 
-      // India with detailed climate data
       const indiaLayer = L.polygon([
         [35.504223, 68.176645], [35.5, 97.416259],
         [6.462699, 97.416259], [6.5, 68.176645]
@@ -1070,7 +1061,6 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       `);
 
-      // Add major cities with markers
       const cities = [
         { name: 'Kabul', coords: [34.5553, 69.2075], country: 'Afghanistan', data: 'Temp: +1.8°C' },
         { name: 'Kandahar', coords: [31.6289, 65.7372], country: 'Afghanistan', data: 'Drought risk' },
@@ -1099,22 +1089,14 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         `);
       });
 
-      // Fit map to show all three countries
       const southAsiaGroup = new L.featureGroup([afghanistanLayer, pakistanLayer, indiaLayer]);
       climateMap.fitBounds(southAsiaGroup.getBounds().pad(0.15));
 
-      // Add scale control
       L.control.scale({
         imperial: false,
         metric: true
       }).addTo(climateMap);
     });
   </script>
-  <script>
-    // Your Chart.js and Leaflet code here (without is:inline)
-    document.addEventListener('DOMContentLoaded', function() {
-      // ... all your chart and map code ...
-    });
-  </script>
-/body>
+</body>
 </html>
