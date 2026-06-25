@@ -6,10 +6,10 @@ export async function onRequestPost(context) {
   try {
     const { prompt } = await request.json();
 
-    // This is the BEST and smartest free model on Cloudflare (70 Billion Parameters)
-    const response = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
+    // Try Gemma 7B - Best balance of smart & fast
+    const response = await env.AI.run('@cf/google/gemma-7b-it', {
       prompt: prompt,
-      max_tokens: 2000, // Long, detailed answers
+      max_tokens: 2000,
     });
 
     return new Response(JSON.stringify({ 
