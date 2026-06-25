@@ -906,6 +906,22 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     
     <div id="statusMessage" style="margin-top: 15px; padding: 12px; border-radius: 6px; display: none; text-align: center;"></div>
   </section>
+  <!-- AI Chat Section -->
+  <section class="container" id="ai-chat" style="max-width: 800px; margin: 50px auto;">
+    <div class="section-header">
+      <span class="tag">Powered by Cloudflare AI</span>
+      <h2>Ask the Climate Archive AI</h2>
+      <p>Ask a question about climate change in South Asia!</p>
+    </div>
+    
+    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+      <textarea id="aiPrompt" placeholder="Ask something like: 'How is climate change affecting glaciers in Pakistan?'" style="width: 100%; height: 100px; padding: 15px; border: 1px solid #e8e4de; border-radius: 8px; margin-bottom: 15px; font-size: 1rem;"></textarea>
+      
+      <button id="askAiBtn" style="background: var(--ocean); color: white; padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Ask AI</button>
+      
+      <div id="aiResponse" style="margin-top: 20px; padding: 20px; background: var(--cream); border-radius: 8px; display: none; line-height: 1.6;"></div>
+    </div>
+  </section>
 
   <footer>
     <p style="font-size: 1.1rem; margin-bottom: 10px;">Built by @Akil Godara</p>
@@ -1098,5 +1114,39 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
       }).addTo(climateMap);
     });
   </script>
+  // --- AI Chat Logic ---
+  const askBtn = document.getElementById('askAiBtn');
+  const promptInput = document.getElementById('aiPrompt');
+  const responseDiv = document.getElementById('aiResponse');
+
+  if (askBtn) {
+    askBtn.addEventListener('click', async () => {
+      const prompt = promptInput.value;
+      if (!prompt) return;
+
+      responseDiv.style.display = 'block';
+      responseDiv.innerText = 'Thinking...';
+      askBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: prompt })
+        });
+        const data = await res.json();
+            
+        if (data.success) {
+          responseDiv.innerText = data.reply;
+        } else {
+          responseDiv.innerText = 'Error: ' + data.error;
+        }
+        } catch (err) {
+          responseDiv.innerText = 'Failed to connect to AI.';
+        }
+          
+        askBtn.disabled = false;
+      });
+    }
 </body>
 </html>
