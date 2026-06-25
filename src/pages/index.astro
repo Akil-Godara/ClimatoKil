@@ -1060,7 +1060,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
       L.control.scale({ imperial: false, metric: true }).addTo(climateMap);
 
       // --- Chatbot Logic ---
-      const chatHistoryArray = []; // This remembers the whole conversation
+      const chatHistoryArray = [];
       const historyDiv = document.getElementById('chat-history');
       const chatInput = document.getElementById('chat-input');
       const sendBtn = document.getElementById('send-btn');
@@ -1070,57 +1070,56 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         bubble.className = `chat-bubble ${role}-bubble`;
         bubble.textContent = text;
         historyDiv.appendChild(bubble);
-        historyDiv.scrollTop = historyDiv.scrollHeight; // Auto scroll to bottom
+        historyDiv.scrollTop = historyDiv.scrollHeight;
       }
 
-      sendBtn.addEventListener('click', async () => {
-        const userText = chatInput.value.trim();
-        if (!userText) return;
+      if (sendBtn) {
+        sendBtn.addEventListener('click', async () => {
+          const userText = chatInput.value.trim();
+          if (!userText) return;
 
-        // 1. Show user message
-        addBubble(userText, 'user');
-        chatInput.value = '';
-        chatHistoryArray.push({ role: 'user', content: userText });
+          addBubble(userText, 'user');
+          chatInput.value = '';
+          chatHistoryArray.push({ role: 'user', content: userText });
 
-        // 2. Show "Thinking..." bubble
-        const loadingBubble = document.createElement('div');
-        loadingBubble.className = 'chat-bubble ai-bubble';
-        loadingBubble.textContent = 'Thinking...';
-        historyDiv.appendChild(loadingBubble);
-        historyDiv.scrollTop = historyDiv.scrollHeight;
-        sendBtn.disabled = true;
+          const loadingBubble = document.createElement('div');
+          loadingBubble.className = 'chat-bubble ai-bubble';
+          loadingBubble.textContent = 'Thinking...';
+          historyDiv.appendChild(loadingBubble);
+          historyDiv.scrollTop = historyDiv.scrollHeight;
+          sendBtn.disabled = true;
 
-        // 3. Send ENTIRE history to the API
-        try {
-          const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messages: chatHistoryArray })
-          });
-          const data = await res.json();
+          try {
+            const res = await fetch('/api/chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ messages: chatHistoryArray })
+            });
+            const data = await res.json();
 
-          // Remove loading bubble
-          loadingBubble.remove();
+            loadingBubble.remove();
 
-          if (data.success) {
-            addBubble(data.reply, 'ai');
-            chatHistoryArray.push({ role: 'assistant', content: data.reply });
-          } else {
-            addBubble('Error: ' + data.error, 'ai');
+            if (data.success) {
+              addBubble(data.reply, 'ai');
+              chatHistoryArray.push({ role: 'assistant', content: data.reply });
+            } else {
+              addBubble('Error: ' + data.error, 'ai');
+            }
+          } catch (err) {
+            loadingBubble.remove();
+            addBubble('Failed to connect to AI.', 'ai');
           }
-        } catch (err) {
-          loadingBubble.remove();
-          addBubble('Failed to connect to AI.', 'ai');
-        }
-        
-        sendBtn.disabled = false;
-        chatInput.focus();
-      });
+          
+          sendBtn.disabled = false;
+          chatInput.focus();
+        });
 
-      // Allow pressing "Enter" to send
-      chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendBtn.click();
-      });
+        chatInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') sendBtn.click();
+        });
+      }
+
+    }); // <-- This closes DOMContentLoaded
   </script>
   
   <style>
