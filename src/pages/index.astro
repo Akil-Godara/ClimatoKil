@@ -910,9 +910,10 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     <p style="opacity: 0.7; font-size: 0.9rem;">© 2026 ClimatoKil - Data Sources: IPCC, NOAA, NASA, ISRO, World Bank</p>
   </footer>
 
-  <!-- Load external scripts -->
-  <script is:inline src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- External Libraries -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- Main application script -->
   <script is:inline>
@@ -1109,5 +1110,11 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
       }).addTo(climateMap);
     });
   </script>
-</body>
+  <script>
+    // Your Chart.js and Leaflet code here (without is:inline)
+    document.addEventListener('DOMContentLoaded', function() {
+      // ... all your chart and map code ...
+    });
+  </script>
+/body>
 </html>
