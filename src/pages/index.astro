@@ -8,9 +8,10 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+<!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+
 <style>
   :root {
     --coffee: #d4a574;
@@ -909,198 +910,204 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     <p style="opacity: 0.7; font-size: 0.9rem;">© 2026 ClimatoKil - Data Sources: IPCC, NOAA, NASA, ISRO, World Bank</p>
   </footer>
 
-  <script>
-    const years = ['1960','1970','1980','1990','2000','2010','2020','2024'];
+  <!-- Load external scripts -->
+  <script is:inline src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    new Chart(document.getElementById('tempChart'), {
-      type: 'line',
-      data: {
-        labels: years,
-        datasets: [
-          { label: 'Afghanistan', data: [0, 0.3, 0.6, 0.9, 1.1, 1.4, 1.7, 1.8], borderColor: '#c17a5a', backgroundColor: 'rgba(193, 122, 90, 0.1)', fill: true, tension: 0.4 },
-          { label: 'Pakistan', data: [0, 0.2, 0.5, 0.7, 0.9, 1.1, 1.4, 1.5], borderColor: '#5b9ea6', backgroundColor: 'rgba(91, 158, 166, 0.1)', fill: true, tension: 0.4 },
-          { label: 'India', data: [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.3], borderColor: '#7a9e7e', backgroundColor: 'rgba(122, 158, 126, 0.1)', fill: true, tension: 0.4 }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
-        scales: {
-          y: { beginAtZero: false, title: { display: true, text: 'Temperature Anomaly (°C)' } },
-          x: { title: { display: true, text: 'Year' } }
+  <!-- Main application script -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function() {
+      const years = ['1960','1970','1980','1990','2000','2010','2020','2024'];
+
+      new Chart(document.getElementById('tempChart'), {
+        type: 'line',
+        data: {
+          labels: years,
+          datasets: [
+            { label: 'Afghanistan', data: [0, 0.3, 0.6, 0.9, 1.1, 1.4, 1.7, 1.8], borderColor: '#c17a5a', backgroundColor: 'rgba(193, 122, 90, 0.1)', fill: true, tension: 0.4 },
+            { label: 'Pakistan', data: [0, 0.2, 0.5, 0.7, 0.9, 1.1, 1.4, 1.5], borderColor: '#5b9ea6', backgroundColor: 'rgba(91, 158, 166, 0.1)', fill: true, tension: 0.4 },
+            { label: 'India', data: [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.3], borderColor: '#7a9e7e', backgroundColor: 'rgba(122, 158, 126, 0.1)', fill: true, tension: 0.4 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: {
+            y: { beginAtZero: false, title: { display: true, text: 'Temperature Anomaly (°C)' } },
+            x: { title: { display: true, text: 'Year' } }
+          }
         }
-      }
-    });
+      });
 
-    new Chart(document.getElementById('precipChart'), {
-      type: 'bar',
-      data: {
-        labels: years,
-        datasets: [
-          { label: 'Afghanistan', data: [0, -2, -5, -7, -9, -10, -11, -12], backgroundColor: 'rgba(193, 122, 90, 0.7)' },
-          { label: 'Pakistan', data: [0, 1, 2, 3, 4, 6, 7, 8], backgroundColor: 'rgba(91, 158, 166, 0.7)' },
-          { label: 'India', data: [0, 2, 3, 5, 6, 8, 9, 10], backgroundColor: 'rgba(122, 158, 126, 0.7)' }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
-        scales: {
-          y: { title: { display: true, text: 'Change from Baseline (%)' } },
-          x: { title: { display: true, text: 'Year' } }
+      new Chart(document.getElementById('precipChart'), {
+        type: 'bar',
+        data: {
+          labels: years,
+          datasets: [
+            { label: 'Afghanistan', data: [0, -2, -5, -7, -9, -10, -11, -12], backgroundColor: 'rgba(193, 122, 90, 0.7)' },
+            { label: 'Pakistan', data: [0, 1, 2, 3, 4, 6, 7, 8], backgroundColor: 'rgba(91, 158, 166, 0.7)' },
+            { label: 'India', data: [0, 2, 3, 5, 6, 8, 9, 10], backgroundColor: 'rgba(122, 158, 126, 0.7)' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: {
+            y: { title: { display: true, text: 'Change from Baseline (%)' } },
+            x: { title: { display: true, text: 'Year' } }
+          }
         }
-      }
+      });
+
+      new Chart(document.getElementById('glacierChart'), {
+        type: 'line',
+        data: {
+          labels: years,
+          datasets: [
+            { label: 'Afghanistan', data: [0, -5, -12, -18, -22, -25, -28, -30], borderColor: '#c17a5a', tension: 0.4 },
+            { label: 'Pakistan', data: [0, -8, -15, -22, -28, -32, -35, -38], borderColor: '#5b9ea6', tension: 0.4 },
+            { label: 'India', data: [0, -10, -18, -25, -32, -38, -42, -45], borderColor: '#7a9e7e', tension: 0.4 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { y: { title: { display: true, text: 'Mass Loss (%)' }, beginAtZero: false } }
+        }
+      });
+
+      new Chart(document.getElementById('waterChart'), {
+        type: 'line',
+        data: {
+          labels: years,
+          datasets: [
+            { label: 'Afghanistan', data: [3500, 3200, 2800, 2400, 2000, 1600, 1200, 1000], borderColor: '#d4a574', backgroundColor: 'rgba(212, 165, 116, 0.1)', fill: true, tension: 0.4 },
+            { label: 'Pakistan', data: [5000, 4200, 3500, 2800, 2200, 1600, 1200, 1000], borderColor: '#c17a5a', backgroundColor: 'rgba(193, 122, 90, 0.1)', fill: true, tension: 0.4 },
+            { label: 'India', data: [4000, 3500, 3000, 2500, 2000, 1600, 1300, 1100], borderColor: '#5b9ea6', backgroundColor: 'rgba(91, 158, 166, 0.1)', fill: true, tension: 0.4 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { y: { title: { display: true, text: 'm³ per capita' }, beginAtZero: false } }
+        }
+      });
+
+      // Initialize South Asia focused map
+      const climateMap = L.map('southAsiaMap').setView([32, 72], 5);
+
+      // Add OpenStreetMap base layer
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors | Climate Data: IPCC, NASA, NOAA',
+        maxZoom: 8
+      }).addTo(climateMap);
+
+      // Afghanistan with detailed climate data
+      const afghanistanLayer = L.polygon([
+        [38.48333, 60.478473], [38.5, 74.889758], 
+        [29.377479, 74.889758], [29.35, 60.517421]
+      ], {
+        color: '#c17a5a',
+        fillColor: '#c17a5a',
+        fillOpacity: 0.35,
+        weight: 2,
+        dashArray: '5, 5'
+      }).addTo(climateMap).bindPopup(`
+        <div style="font-family: sans-serif; padding: 5px;">
+          <h3 style="margin: 0 0 10px 0; color: #c17a5a;">Afghanistan</h3>
+          <strong>Temperature:</strong> +1.8°C<br/>
+          <strong>Precipitation:</strong> -12%<br/>
+          <strong>Glaciers:</strong> -25%<br/>
+          <strong>Water:</strong> -30%<br/>
+          <strong>Heatwaves:</strong> +45°C max
+        </div>
+      `);
+
+      // Pakistan with detailed climate data
+      const pakistanLayer = L.polygon([
+        [37.097421, 60.874208], [37.1, 77.837452],
+        [23.786553, 77.837452], [23.8, 60.874208]
+      ], {
+        color: '#5b9ea6',
+        fillColor: '#5b9ea6',
+        fillOpacity: 0.35,
+        weight: 2,
+        dashArray: '5, 5'
+      }).addTo(climateMap).bindPopup(`
+        <div style="font-family: sans-serif; padding: 5px;">
+          <h3 style="margin: 0 0 10px 0; color: #5b9ea6;">Pakistan</h3>
+          <strong>Temperature:</strong> +1.5°C<br/>
+          <strong>Precipitation:</strong> +8% (erratic)<br/>
+          <strong>Glaciers:</strong> -35%<br/>
+          <strong>Water Stress:</strong> 1000m³/capita<br/>
+          <strong>Heatwaves:</strong> +52°C max
+        </div>
+      `);
+
+      // India with detailed climate data
+      const indiaLayer = L.polygon([
+        [35.504223, 68.176645], [35.5, 97.416259],
+        [6.462699, 97.416259], [6.5, 68.176645]
+      ], {
+        color: '#7a9e7e',
+        fillColor: '#7a9e7e',
+        fillOpacity: 0.35,
+        weight: 2,
+        dashArray: '5, 5'
+      }).addTo(climateMap).bindPopup(`
+        <div style="font-family: sans-serif; padding: 5px;">
+          <h3 style="margin: 0 0 10px 0; color: #7a9e7e;">India</h3>
+          <strong>Temperature:</strong> +1.3°C<br/>
+          <strong>Precipitation:</strong> +10% (erratic)<br/>
+          <strong>Glaciers:</strong> -40%<br/>
+          <strong>Water:</strong> -45%<br/>
+          <strong>Heatwaves:</strong> +50°C max
+        </div>
+      `);
+
+      // Add major cities with markers
+      const cities = [
+        { name: 'Kabul', coords: [34.5553, 69.2075], country: 'Afghanistan', data: 'Temp: +1.8°C' },
+        { name: 'Kandahar', coords: [31.6289, 65.7372], country: 'Afghanistan', data: 'Drought risk' },
+        { name: 'Islamabad', coords: [33.6844, 73.0479], country: 'Pakistan', data: 'Floods +25%' },
+        { name: 'Karachi', coords: [24.8607, 67.0011], country: 'Pakistan', data: 'Heat: +2.5°C' },
+        { name: 'Lahore', coords: [31.5204, 74.3587], country: 'Pakistan', data: 'Air crisis' },
+        { name: 'New Delhi', coords: [28.7041, 77.1025], country: 'India', data: 'Heatwaves +8x' },
+        { name: 'Mumbai', coords: [19.0760, 72.8777], country: 'India', data: 'Sea level +3.4mm/yr' },
+        { name: 'Srinagar', coords: [34.0837, 74.7973], country: 'India', data: 'Glacier melt' }
+      ];
+
+      cities.forEach(city => {
+        const marker = L.circleMarker(city.coords, {
+          radius: 7,
+          fillColor: '#d4a574',
+          color: '#fff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8
+        }).addTo(climateMap).bindPopup(`
+          <div style="font-family: sans-serif; padding: 5px;">
+            <strong>${city.name}</strong><br/>
+            ${city.country}<br/>
+            <small style="color: #666;">${city.data}</small>
+          </div>
+        `);
+      });
+
+      // Fit map to show all three countries
+      const southAsiaGroup = new L.featureGroup([afghanistanLayer, pakistanLayer, indiaLayer]);
+      climateMap.fitBounds(southAsiaGroup.getBounds().pad(0.15));
+
+      // Add scale control
+      L.control.scale({
+        imperial: false,
+        metric: true
+      }).addTo(climateMap);
     });
-
-    new Chart(document.getElementById('glacierChart'), {
-      type: 'line',
-      data: {
-        labels: years,
-        datasets: [
-          { label: 'Afghanistan', data: [0, -5, -12, -18, -22, -25, -28, -30], borderColor: '#c17a5a', tension: 0.4 },
-          { label: 'Pakistan', data: [0, -8, -15, -22, -28, -32, -35, -38], borderColor: '#5b9ea6', tension: 0.4 },
-          { label: 'India', data: [0, -10, -18, -25, -32, -38, -42, -45], borderColor: '#7a9e7e', tension: 0.4 }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
-        scales: { y: { title: { display: true, text: 'Mass Loss (%)' }, beginAtZero: false } }
-      }
-    });
-
-    new Chart(document.getElementById('waterChart'), {
-      type: 'line',
-      data: {
-        labels: years,
-        datasets: [
-          { label: 'Afghanistan', data: [3500, 3200, 2800, 2400, 2000, 1600, 1200, 1000], borderColor: '#d4a574', backgroundColor: 'rgba(212, 165, 116, 0.1)', fill: true, tension: 0.4 },
-          { label: 'Pakistan', data: [5000, 4200, 3500, 2800, 2200, 1600, 1200, 1000], borderColor: '#c17a5a', backgroundColor: 'rgba(193, 122, 90, 0.1)', fill: true, tension: 0.4 },
-          { label: 'India', data: [4000, 3500, 3000, 2500, 2000, 1600, 1300, 1100], borderColor: '#5b9ea6', backgroundColor: 'rgba(91, 158, 166, 0.1)', fill: true, tension: 0.4 }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
-        scales: { y: { title: { display: true, text: 'm³ per capita' }, beginAtZero: false } }
-      }
-    });
-
-    // Initialize South Asia focused map
-    const climateMap = L.map('southAsiaMap').setView([32, 72], 5);
-
-    // Add OpenStreetMap base layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors | Climate Data: IPCC, NASA, NOAA',
-      maxZoom: 8
-    }).addTo(climateMap);
-
-    // Afghanistan with detailed climate data
-    const afghanistanLayer = L.polygon([
-      [38.48333, 60.478473], [38.5, 74.889758], 
-      [29.377479, 74.889758], [29.35, 60.517421]
-    ], {
-      color: '#c17a5a',
-      fillColor: '#c17a5a',
-      fillOpacity: 0.35,
-      weight: 2,
-      dashArray: '5, 5'
-    }).addTo(climateMap).bindPopup(`
-      <div style="font-family: sans-serif; padding: 5px;">
-        <h3 style="margin: 0 0 10px 0; color: #c17a5a;">Afghanistan</h3>
-        <strong>Temperature:</strong> +1.8°C<br/>
-        <strong>Precipitation:</strong> -12%<br/>
-        <strong>Glaciers:</strong> -25%<br/>
-        <strong>Water:</strong> -30%<br/>
-        <strong>Heatwaves:</strong> +45°C max
-      </div>
-    `);
-
-    // Pakistan with detailed climate data
-    const pakistanLayer = L.polygon([
-      [37.097421, 60.874208], [37.1, 77.837452],
-      [23.786553, 77.837452], [23.8, 60.874208]
-    ], {
-      color: '#5b9ea6',
-      fillColor: '#5b9ea6',
-      fillOpacity: 0.35,
-      weight: 2,
-      dashArray: '5, 5'
-    }).addTo(climateMap).bindPopup(`
-      <div style="font-family: sans-serif; padding: 5px;">
-        <h3 style="margin: 0 0 10px 0; color: #5b9ea6;">Pakistan</h3>
-        <strong>Temperature:</strong> +1.5°C<br/>
-        <strong>Precipitation:</strong> +8% (erratic)<br/>
-        <strong>Glaciers:</strong> -35%<br/>
-        <strong>Water Stress:</strong> 1000m³/capita<br/>
-        <strong>Heatwaves:</strong> +52°C max
-      </div>
-    `);
-
-    // India with detailed climate data
-    const indiaLayer = L.polygon([
-      [35.504223, 68.176645], [35.5, 97.416259],
-      [6.462699, 97.416259], [6.5, 68.176645]
-    ], {
-      color: '#7a9e7e',
-      fillColor: '#7a9e7e',
-      fillOpacity: 0.35,
-      weight: 2,
-      dashArray: '5, 5'
-    }).addTo(climateMap).bindPopup(`
-      <div style="font-family: sans-serif; padding: 5px;">
-        <h3 style="margin: 0 0 10px 0; color: #7a9e7e;">India</h3>
-        <strong>Temperature:</strong> +1.3°C<br/>
-        <strong>Precipitation:</strong> +10% (erratic)<br/>
-        <strong>Glaciers:</strong> -40%<br/>
-        <strong>Water:</strong> -45%<br/>
-        <strong>Heatwaves:</strong> +50°C max
-      </div>
-    `);
-
-    // Add major cities with markers
-    const cities = [
-      { name: 'Kabul', coords: [34.5553, 69.2075], country: 'Afghanistan', data: 'Temp: +1.8°C' },
-      { name: 'Kandahar', coords: [31.6289, 65.7372], country: 'Afghanistan', data: 'Drought risk' },
-      { name: 'Islamabad', coords: [33.6844, 73.0479], country: 'Pakistan', data: 'Floods +25%' },
-      { name: 'Karachi', coords: [24.8607, 67.0011], country: 'Pakistan', data: 'Heat: +2.5°C' },
-      { name: 'Lahore', coords: [31.5204, 74.3587], country: 'Pakistan', data: 'Air crisis' },
-      { name: 'New Delhi', coords: [28.7041, 77.1025], country: 'India', data: 'Heatwaves +8x' },
-      { name: 'Mumbai', coords: [19.0760, 72.8777], country: 'India', data: 'Sea level +3.4mm/yr' },
-      { name: 'Srinagar', coords: [34.0837, 74.7973], country: 'India', data: 'Glacier melt' }
-    ];
-
-    cities.forEach(city => {
-      const marker = L.circleMarker(city.coords, {
-      radius: 7,
-      fillColor: '#d4a574',
-      color: '#fff',
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.8
-    }).addTo(climateMap).bindPopup(`
-      <div style="font-family: sans-serif; padding: 5px;">
-        <strong>${city.name}</strong><br/>
-        ${city.country}<br/>
-        <small style="color: #666;">${city.data}</small>
-      </div>
-    `);
-});
-
-    // Fit map to show all three countries
-    const southAsiaGroup = new L.featureGroup([afghanistanLayer, pakistanLayer, indiaLayer]);
-    climateMap.fitBounds(southAsiaGroup.getBounds().pad(0.15));
-
-    // Add scale control
-    L.control.scale({
-     imperial: false,
-     metric: true
-    }).addTo(climateMap);
-    
   </script>
 </body>
 </html>
