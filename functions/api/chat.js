@@ -6,8 +6,8 @@ export async function onRequestPost(context) {
   try {
     const { prompt } = await request.json();
 
-    // Try Gemma 7B - Best balance of smart & fast
-    const response = await env.AI.run('@cf/google/gemma-7b-it', {
+    // Mistral 7B - Very smart and works perfectly on Cloudflare
+    const response = await env.AI.run('@cf/mistral/mistral-7b-instruct-v0.1', {
       prompt: prompt,
       max_tokens: 2000,
     });
