@@ -1,7 +1,9 @@
 {
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"compatibility_date": "2026-06-24",
-	"compatibility_flags": ["global_fetch_strictly_public"],
+	"compatibility_flags": [
+		"global_fetch_strictly_public"
+	],
 	"name": "climato-kil",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"assets": {
@@ -10,5 +12,12 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"vectorize": [
+		{
+			"binding": "VECTORIZE",
+			"index_name": "climatokil-index",
+			"remote": true
+		}
+	]
 }
