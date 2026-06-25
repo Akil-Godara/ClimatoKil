@@ -1208,19 +1208,22 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
    }
    .chat-input-area {
      display: flex;
-     padding: 20px;
-     background: white;
+     padding: 20px 25px; /* More padding */
+     background: sky;
      border-top: 1px solid var(--light-gray);
      gap: 15px;
+     align-items: centre; /* Centre items vertically */
    }
    #chat-input {
      flex: 1;
-     padding: 18px 25px;
+     padding: 18px 30px; /* More padding on left/right */
      border: 2px solid var(--light-gray);
      border-radius: 30px;
-     font-size: 1.1rem;
+     font-size: 1.15rem; /* Larger font */
      outline: none;
      transition: all 0.3s;
+     min-width: 200px; /* Minimum width */
+     width: 100%; /* Full width available */
    }
    #chat-input:focus { 
      border-color: var(--ocean);
