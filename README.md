@@ -1,3 +1,4 @@
+cat > README.md << 'EOF'
 # 🌍 ClimatoKil - South Asia Climate Data Archive
 
 A comprehensive climate data visualization platform tracking environmental changes across **Afghanistan, Pakistan, and India** from 1960 to present.
@@ -22,19 +23,19 @@ ClimatoKil is a data-driven archive that visualizes long-term climate transforma
 
 ## 🗺️ Countries Covered
 
-###  Afghanistan
+### 🇦🇫 Afghanistan
 - Temperature: +1.8°C since 1960
 - Precipitation: -12% decrease
 - Glacier loss: -25% in Hindu Kush
 - Water resources: -30% reduction
 
-###  Pakistan
+### 🇵🇰 Pakistan
 - Temperature: +1.5°C since 1960
 - Precipitation: +8% (highly erratic)
 - Glacier loss: -35% in Karakoram
 - Water stress: Critical (1000m³ per capita)
 
-###  India
+### 🇮🇳 India
 - Temperature: +1.3°C since 1960
 - Precipitation: +10% (erratic monsoons)
 - Glacier loss: -40% in Himalayas
@@ -85,4 +86,42 @@ Climate data synthesized from reports by:
 - **World Bank** - Climate Change Knowledge Portal
 - **UNFCCC** - Greenhouse Gas Inventory
 
+---
+
+## 📂 Project Structure
+```
+climatokil/
+│ └── api/
+│ └── chat.js
+├── public/
+|└── assets/  
+├── src/
+│└── pages/
+│└── index.astro
+└── package.json
+```
+---
+📦 Deployment
+
+This project is automatically deployed to Cloudflare Pages when changes are pushed to the main branch.
+Build Settings:
+Framework preset: Astro
+Build command: npm run build
+Build output directory: dist
+
+---
+🤖 AI Chatbot
+
+The site features an AI-powered chatbot built with Cloudflare Workers AI (Mistral 7B model) that can answer questions about climate change in South Asia. The chatbot maintains conversation history and can be cleared with a single click.
+
+---
+👨‍💻 Author
+Built by @Akil Godara
+---
+
+Built by @Akil Godara
+---
+📄 License
+
+This project is created for educational and research purposes.
 ---
