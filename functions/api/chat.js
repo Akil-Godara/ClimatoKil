@@ -4,12 +4,13 @@ export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
-    const { prompt } = await request.json();
+    // 1. Get the array of messages from the frontend
+    const { messages } = await request.json();
 
-    // Mistral 7B - Very smart and works perfectly on Cloudflare
+    // 2. Send the conversation history to Mistral AI
     const response = await env.AI.run('@cf/mistral/mistral-7b-instruct-v0.1', {
-      prompt: prompt,
-      max_tokens: 2000,
+      messages: messages, 
+      max_tokens: 1024,
     });
 
     return new Response(JSON.stringify({ 

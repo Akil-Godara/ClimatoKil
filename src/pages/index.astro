@@ -906,22 +906,24 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     
     <div id="statusMessage" style="margin-top: 15px; padding: 12px; border-radius: 6px; display: none; text-align: center;"></div>
   </section>
-  <!-- AI Chat Section -->
-  <section class="container" id="ai-chat" style="max-width: 800px; margin: 50px auto;">
+  <!-- AI Chatbot Section -->
+  <section class="container" id="ai-chat" style="padding-top: 50px; padding-bottom: 50px;">
     <div class="section-header">
       <span class="tag">Powered by Cloudflare AI</span>
-      <h2>Ask the Climate Archive AI</h2>
-      <p>Ask a question about climate change in South Asia!</p>
+      <h2>Climate Archive Chatbot</h2>
+      <p>Ask me anything about climate change in South Asia. I remember our conversation!</p>
     </div>
     
-    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-      <textarea id="aiPrompt" placeholder="Ask something like: 'How is climate change affecting glaciers in Pakistan?'" style="width: 100%; height: 100px; padding: 15px; border: 1px solid #e8e4de; border-radius: 8px; margin-bottom: 15px; font-size: 1rem;"></textarea>
-      
-      <button id="askAiBtn" style="background: var(--ocean); color: white; padding: 12px 24px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Ask AI</button>
-      
-      <div id="aiResponse" style="margin-top: 20px; padding: 20px; background: var(--cream); border-radius: 8px; display: none; line-height: 1.6;"></div>
+    <div class="chatbot-container">
+      <div class="chat-history" id="chat-history">
+        <div class="chat-bubble ai-bubble">Hello! I am the Climate Archive AI. Ask me about temperature changes, glaciers, or rainfall in South Asia!</div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Type your question here..." />
+        <button id="send-btn">Send</button>
+      </div>
     </div>
-  </section>
+   </section>
 
   <footer>
     <p style="font-size: 1.1rem; margin-bottom: 10px;">Built by @Akil Godara</p>
@@ -1057,42 +1059,141 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
       climateMap.fitBounds(southAsiaGroup.getBounds().pad(0.15));
       L.control.scale({ imperial: false, metric: true }).addTo(climateMap);
 
-      // --- AI Chat Logic ---
-      const askBtn = document.getElementById('askAiBtn');
-      const promptInput = document.getElementById('aiPrompt');
-      const responseDiv = document.getElementById('aiResponse');
+      // --- Chatbot Logic ---
+      const chatHistoryArray = []; // This remembers the whole conversation
+      const historyDiv = document.getElementById('chat-history');
+      const chatInput = document.getElementById('chat-input');
+      const sendBtn = document.getElementById('send-btn');
 
-      if (askBtn) {
-        askBtn.addEventListener('click', async () => {
-          const prompt = promptInput.value;
-          if (!prompt) return;
-
-          responseDiv.style.display = 'block';
-          responseDiv.innerText = 'Thinking...';
-          askBtn.disabled = true;
-
-          try {
-            const res = await fetch('/api/chat', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ prompt: prompt })
-            });
-            const data = await res.json();
-            
-            if (data.success) {
-              responseDiv.innerText = data.reply;
-            } else {
-              responseDiv.innerText = 'Error: ' + data.error;
-            }
-          } catch (err) {
-            responseDiv.innerText = 'Failed to connect to AI.';
-          }
-          
-          askBtn.disabled = false;
-        });
+      function addBubble(text, role) {
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${role}-bubble`;
+        bubble.textContent = text;
+        historyDiv.appendChild(bubble);
+        historyDiv.scrollTop = historyDiv.scrollHeight; // Auto scroll to bottom
       }
 
-    }); // <-- IMPORTANT: This closes the DOMContentLoaded function!
+      sendBtn.addEventListener('click', async () => {
+        const userText = chatInput.value.trim();
+        if (!userText) return;
+
+        // 1. Show user message
+        addBubble(userText, 'user');
+        chatInput.value = '';
+        chatHistoryArray.push({ role: 'user', content: userText });
+
+        // 2. Show "Thinking..." bubble
+        const loadingBubble = document.createElement('div');
+        loadingBubble.className = 'chat-bubble ai-bubble';
+        loadingBubble.textContent = 'Thinking...';
+        historyDiv.appendChild(loadingBubble);
+        historyDiv.scrollTop = historyDiv.scrollHeight;
+        sendBtn.disabled = true;
+
+        // 3. Send ENTIRE history to the API
+        try {
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: chatHistoryArray })
+          });
+          const data = await res.json();
+
+          // Remove loading bubble
+          loadingBubble.remove();
+
+          if (data.success) {
+            addBubble(data.reply, 'ai');
+            chatHistoryArray.push({ role: 'assistant', content: data.reply });
+          } else {
+            addBubble('Error: ' + data.error, 'ai');
+          }
+        } catch (err) {
+          loadingBubble.remove();
+          addBubble('Failed to connect to AI.', 'ai');
+        }
+        
+        sendBtn.disabled = false;
+        chatInput.focus();
+      });
+
+      // Allow pressing "Enter" to send
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendBtn.click();
+      });
   </script>
-</body>
+  
+  <style>
+   /* Chatbot Styles */
+   .chatbot-container {
+     max-width: 700px;
+     margin: 0 auto;
+     background: white;
+     border-radius: 12px;
+     box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+     overflow: hidden;
+     display: flex;
+     flex-direction: column;
+     height: 500px;
+     border: 1px solid var(--light-gray);
+   }
+   .chat-history {
+     flex: 1;
+     padding: 20px;
+     overflow-y: auto;
+     background: var(--cream);
+     display: flex;
+     flex-direction: column;
+     gap: 15px;
+   }
+   .chat-bubble {
+     padding: 12px 18px;
+     border-radius: 18px;
+     max-width: 80%;
+     line-height: 1.5;
+     font-size: 0.95rem;
+   }
+   .user-bubble {
+     align-self: flex-end;
+     background: var(--ocean);
+     color: white;
+     border-bottom-right-radius: 4px;
+   }
+   .ai-bubble {
+     align-self: flex-start;
+     background: white;
+     color: var(--dark);
+     border: 1px solid var(--light-gray);
+     border-bottom-left-radius: 4px;
+   }
+   .chat-input-area {
+     display: flex;
+     padding: 15px;
+     background: white;
+     border-top: 1px solid var(--light-gray);
+     gap: 10px;
+   }
+   #chat-input {
+     flex: 1;
+     padding: 12px 15px;
+     border: 1px solid var(--light-gray);
+     border-radius: 25px;
+     font-size: 1rem;
+     outline: none;
+   }
+   #chat-input:focus { border-color: var(--ocean); }
+   #send-btn {
+     background: var(--ocean);
+     color: white;
+     border: none;
+     border-radius: 25px;
+     padding: 0 25px;
+     font-weight: bold;
+     cursor: pointer;
+     transition: background 0.2s;
+   }
+   #send-btn:hover { background: var(--ocean-deep); }
+   #send-btn:disabled { background: #ccc; cursor: not-allowed; }
+  </style>
+  </body>
 </html>
