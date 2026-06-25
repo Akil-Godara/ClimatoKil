@@ -84,3 +84,5 @@ Climate data synthesized from reports by:
 - **ESA** - European Space Agency
 - **World Bank** - Climate Change Knowledge Portal
 - **UNFCCC** - Greenhouse Gas Inventory
+
+---
