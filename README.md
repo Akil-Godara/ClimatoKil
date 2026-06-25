@@ -43,20 +43,6 @@ ClimatoKil is a data-driven archive that visualizes long-term climate transforma
 
 ---
 
-## 🛠️ Tech Stack
-
-| Component | Technology |
-|-----------|------------|
-| **Framework** | [Astro](https://astro.build/) |
-| **Styling** | Vanilla CSS with CSS Variables |
-| **Charts** | [Chart.js](https://www.chartjs.org/) |
-| **Maps** | [Leaflet.js](https://leafletjs.com/) + OpenStreetMap |
-| **Hosting** | [Cloudflare Pages](https://pages.cloudflare.com/) |
-| **Contact Form** | [Formspree](https://formspree.io/) |
-| **Version Control** | Git + GitHub |
-
----
-
 ## 📊 Data Visualizations
 
 ### Interactive Charts
@@ -101,24 +87,12 @@ climatokil/
 └── package.json
 ```
 ---
-📦 Deployment
-
-This project is automatically deployed to Cloudflare Pages when changes are pushed to the main branch.
-Build Settings:
-Framework preset: Astro
-Build command: npm run build
-Build output directory: dist
-
----
 🤖 AI Chatbot
 
 The site features an AI-powered chatbot built with Cloudflare Workers AI (Mistral 7B model) that can answer questions about climate change in South Asia. The chatbot maintains conversation history and can be cleared with a single click.
 
 ---
-👨‍💻 Author
-Built by @Akil Godara
----
-
+👨‍💻 Author 
 Built by @Akil Godara
 ---
 📄 License
