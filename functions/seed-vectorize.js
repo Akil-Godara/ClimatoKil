@@ -1,5 +1,5 @@
-export async function GET({ locals }) {
-  const env = locals.runtime.env;
+export async function onRequestGet(context) {
+  const { env } = context;
   
   const climateData = [
     { id: 'afg-temp', text: 'Afghanistan average temperature increased by +1.8°C since 1960. Warming rate exceeds global average.' },

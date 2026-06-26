@@ -1,6 +1,5 @@
-export async function POST({ request, locals }) {
-  // In Astro SSR, the environment bindings are on 'locals.runtime.env'
-  const env = locals.runtime.env;
+export async function onRequestPost(context) {
+  const { request, env } = context;
   
   try {
     const { messages } = await request.json();
