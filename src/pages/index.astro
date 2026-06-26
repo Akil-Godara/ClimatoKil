@@ -1094,10 +1094,10 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
           sendBtn.disabled = true;
 
           try {
-            const res = await fetch('/api/chat', {
+            const response = await fetch('/api/chat', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ messages: chatHistory })
+              body: JSON.stringify({ messages: messages })  // ✅ or whatever your variable is named
             });
             const data = await response.json();
 
