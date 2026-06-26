@@ -5,9 +5,9 @@ export async function onRequest(context) {
     const { messages } = await request.json();
     const userQuestion = messages[messages.length - 1].content;
 
-    // 1. Generate embedding
+    // 1. Generate embedding (FIXED: changed 'inputs' to 'text')
     const queryEmbedding = await env.AI.run('@cf/baai/bge-base-en-v1.5', { 
-      inputs: [userQuestion] 
+      text: userQuestion 
     });
 
     // 2. Query Vectorize
@@ -29,7 +29,7 @@ export async function onRequest(context) {
       ]
     });
 
-    // 5. Handle different response formats
+    // 5. Handle response
     const reply = aiResponse.response || aiResponse.result || JSON.stringify(aiResponse);
 
     return new Response(JSON.stringify({ reply }), {
