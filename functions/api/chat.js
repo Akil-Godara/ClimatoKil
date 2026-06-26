@@ -1,39 +1,46 @@
 export async function onRequest(context) {
   const { request, env } = context;
-  const { messages } = await request.json();
   
-  // Get the last thing the user said
-  const userQuestion = messages[messages.length - 1].content;
-
   try {
-    // 1. Turn the user's question into a vector
+    const { messages } = await request.json();
+    const userQuestion = messages[messages.length - 1].content;
+
+    // 1. Generate embedding
     const queryEmbedding = await env.AI.run('@cf/baai/bge-base-en-v1.5', { 
       inputs: [userQuestion] 
     });
 
-    // 2. Search Vectorize for the best matching climate facts
+    // 2. Query Vectorize
     const matches = await env.VECTORIZE.query(queryEmbedding.data[0], { 
       topK: 3, 
       returnMetadata: true 
     });
 
-    // 3. Combine the matched facts into a "context" string
-    const contextText = matches.matches.map(m => m.metadata.text).join('\n');
+    // 3. Build context
+    const contextText = matches.matches.length > 0 
+      ? matches.matches.map(m => m.metadata?.text || '').filter(Boolean).join('\n')
+      : 'No relevant climate data found in archive.';
 
-    // 4. Ask Mistral 7B to answer using ONLY those facts
+    // 4. Call Mistral 7B
     const aiResponse = await env.AI.run('@cf/mistral/mistral-7b-instruct-v0.1', {
       messages: [
-        { role: 'system', content: `You are ClimatoKil AI. Answer the user's question using ONLY this context data:\n\n${contextText}\n\nIf the answer is not in the context, say "I don't have specific data on that in my archive yet."` },
-        ...messages
+        { role: 'system', content: `You are ClimatoKil AI. Use this context:\n\n${contextText}` },
+        { role: 'user', content: userQuestion }
       ]
     });
 
-    return new Response(JSON.stringify({ reply: aiResponse.response }), {
+    // 5. Handle different response formats
+    const reply = aiResponse.response || aiResponse.result || JSON.stringify(aiResponse);
+
+    return new Response(JSON.stringify({ reply }), {
       headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
-    return new Response(JSON.stringify({ reply: "Error processing request: " + error.message }), {
+    console.error('Chat error:', error);
+    return new Response(JSON.stringify({ 
+      reply: `Error: ${error.message}` 
+    }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500
     });
