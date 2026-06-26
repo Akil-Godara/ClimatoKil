@@ -780,36 +780,49 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
   </section>
 
   <section class="container" id="maps">
-    <div class="section-header">
-      <span class="tag">Geographic Visualization</span>
-      <h2>Interactive Climate Maps</h2>
-      <p>Climate indicators across Afghanistan, Pakistan, and India</p>
+  <div class="section-header">
+    <span class="tag">Geographic Visualization</span>
+    <h2>South Asia Climate Regions</h2>
+    <p>Geopolitical and climate zones across Afghanistan, Pakistan, and India</p>
+  </div>
+  
+  <div class="map-container" style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.1);">
+    <!-- Static Map Image -->
+    <div style="position: relative; width: 100%; height: auto; border-radius: 8px; overflow: hidden;">
+      <img 
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/South_Asia_political_map.jpg/1200px-South_Asia_political_map.jpg" 
+        alt="South Asia Geopolitical Map - Afghanistan, Pakistan, India"
+        style="width: 100%; height: auto; display: block;"
+      />
     </div>
-    <div class="map-container">
-      <div id="southAsiaMap" style="height: 600px; border-radius: 8px;"></div>
-      <div style="margin-top: 20px; padding: 20px; background: #7a4f0a; border-radius: 8px;">
-        <h4 style="margin-bottom: 15px; color: var(--ocean-deep);">Climate Data Layers:</h4>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-          <div style="padding: 10px; background: white; border-radius: 6px; border-left: 4px solid #c17a5a;">
-            <strong>Temperature Rise</strong><br/>
-            <small style="color: var(--gray);">Afghanistan: +1.8°C</small>
-          </div>
-          <div style="padding: 10px; background: white; border-radius: 6px; border-left: 4px solid #5b9ea6;">
-            <strong>Precipitation</strong><br/>
-            <small style="color: var(--gray);">Pakistan: +8% (erratic)</small>
-          </div>
-          <div style="padding: 10px; background: white; border-radius: 6px; border-left: 4px solid #7a9e7e;">
-            <strong>Glacier Loss</strong><br/>
-            <small style="color: var(--gray);">India: -40%</small>
-          </div>
-          <div style="padding: 10px; background: white; border-radius: 6px; border-left: 4px solid #d4a574;">
-            <strong>Water Stress</strong><br/>
-            <small style="color: var(--gray);">Regional crisis</small>
-          </div>
+    
+    <!-- Map Legend/Info -->
+    <div style="margin-top: 24px; padding: 20px; background: var(--bg-matte); border-radius: 8px;">
+      <h4 style="margin-bottom: 16px; color: var(--ocean-deep); font-family: var(--font-display);">Key Climate Regions:</h4>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <div style="padding: 12px; background: white; border-radius: 6px; border-left: 4px solid #c17a5a;">
+          <strong style="color: var(--text-main);">Afghanistan</strong><br/>
+          <small style="color: var(--text-muted);">Highlands & Arid Zones<br/>Temp Rise: <strong style="color: var(--warm);">+1.8°C</strong></small>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border-left: 4px solid #5b9ea6;">
+          <strong style="color: var(--text-main);">Pakistan</strong><br/>
+          <small style="color: var(--text-muted);">Indus Basin & Mountains<br/>Glacier Loss: <strong style="color: var(--warm);">-35%</strong></small>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border-left: 4px solid #7a9e7e;">
+          <strong style="color: var(--text-main);">India</strong><br/>
+          <small style="color: var(--text-muted);">Himalayas to Coastal Zones<br/>Water Depletion: <strong style="color: var(--warm);">-45%</strong></small>
         </div>
       </div>
     </div>
-  </section>
+    
+    <!-- Additional Info -->
+    <div style="margin-top: 16px; text-align: center; padding: 12px; background: var(--ocean-light); border-radius: 6px;">
+      <p style="color: var(--ocean-deep); font-size: 0.9rem; margin: 0;">
+        📍 <strong>Region:</strong> South Asia | <strong>Population:</strong> 1.8+ Billion | <strong>Climate Vulnerability:</strong> Extreme
+      </p>
+    </div>
+  </div>
+</section>
 
   <section class="agencies-section" id="agencies">
     <div class="container">
