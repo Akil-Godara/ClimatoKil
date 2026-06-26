@@ -21,12 +21,9 @@ export async function onRequest(context) {
       ]
     });
 
-    // 4. Extract the text (Handles different AI response formats)
+    // 4. Extract text safely
     const reply = aiResponse.response || (aiResponse.result && aiResponse.result.response) || "I couldn't find an answer.";
 
-    console.log("SUCCESSFUL REPLY:", reply);
-
-    // 5. Send back JSON with the key "reply"
     return new Response(JSON.stringify({ reply: reply }), {
       headers: { 'Content-Type': 'application/json' }
     });
