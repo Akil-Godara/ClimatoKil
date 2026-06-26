@@ -90,11 +90,6 @@ climatokil/
 └── package.json
 ```
 ---
-🤖 AI Chatbot
-
-The site features an AI-powered chatbot built with Cloudflare Workers AI (Mistral 7B model) that can answer questions about climate change in South Asia. The chatbot maintains conversation history and can be cleared with a single click.
-
----
 👨‍💻 Author 
 Built by @Akil Godara
 ---
