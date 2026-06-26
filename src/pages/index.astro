@@ -297,6 +297,58 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
   .trend.down { background: rgba(92, 138, 96, 0.15); color: var(--earth); }
   .trend.stable { background: rgba(74, 139, 148, 0.15); color: var(--ocean); }
 
+  /* Resource Menu Styles - ADD THIS */
+  .resource-menu {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--bg-matte);
+    border-radius: 8px;
+    border: 2px solid var(--ocean-light);
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .resource-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-light);
+    font-weight: 600;
+    color: var(--ocean-deep);
+  }
+
+  .resource-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    margin: 8px 0;
+    background: white;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-main);
+    transition: all 0.2s;
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+  }
+
+  .resource-menu-item:hover {
+    background: var(--ocean-light);
+    transform: translateX(4px);
+    border-color: var(--ocean);
+  }
+
+  .resource-menu-item small {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
   /* Charts & Maps */
   .charts-grid {
     display: grid;
