@@ -14,7 +14,7 @@ export async function onRequest(context) {
     const contextText = matches.matches.map(m => m.metadata.text).join('\n');
 
     // 3. Call AI (Llama 3)
-    const aiResponse = await env.AI.run('@cf/meta/llama-3-8b-instruct', {
+    const aiResponse = await env.AI.run('@cf/meta/llama-3-8b-instruct-awq', {
       messages: [
         { role: 'system', content: `You are ClimatoKil AI. Answer using ONLY this context:\n${contextText}` },
         { role: 'user', content: userQuestion }
