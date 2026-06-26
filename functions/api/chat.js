@@ -1,3 +1,4 @@
+cat > functions/api/chat.js << 'EOF'
 export async function onRequest(context) {
   const { request, env } = context;
   
@@ -11,7 +12,8 @@ export async function onRequest(context) {
     const matches = await env.VECTORIZE.query(queryVector, { topK: 3, returnMetadata: true });
     const contextText = matches.matches.map(m => m.metadata.text).join('\n');
 
-    const aiResponse = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+    // Using Qwen model (Highly stable on Cloudflare)
+    const aiResponse = await env.AI.run('@cf/qwen/qwen1.5-14b-chat-awq', {
       messages: [
         { role: 'system', content: 'You are ClimatoKil AI. Answer using ONLY this context:\n' + contextText },
         { role: 'user', content: userQuestion }
@@ -31,3 +33,4 @@ export async function onRequest(context) {
     });
   }
 }
+EOF
