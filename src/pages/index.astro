@@ -297,19 +297,13 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
   .trend.down { background: rgba(92, 138, 96, 0.15); color: var(--earth); }
   .trend.stable { background: rgba(74, 139, 148, 0.15); color: var(--ocean); }
 
-    /* Resource Menu Styles - ADD THIS */
+  /* Resource Menu Styles */
   .resource-menu {
     margin-top: 16px;
     padding: 16px;
-    background: var(--bg-matte);
+    background: #f8f7f4;
     border-radius: 8px;
-    border: 2px solid var(--ocean-light);
-    animation: slideDown 0.3s ease;
-  }
-
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    border: 2px solid #e0f2f1;
   }
 
   .resource-menu-header {
@@ -318,9 +312,9 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     align-items: center;
     margin-bottom: 12px;
     padding-bottom: 8px;
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid #e2e8f0;
     font-weight: 600;
-    color: var(--ocean-deep);
+    color: #1e4d56;
   }
 
   .resource-menu-item {
@@ -332,22 +326,22 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     background: white;
     border-radius: 6px;
     text-decoration: none;
-    color: var(--text-main);
+    color: #1e293b;
     transition: all 0.2s;
-    border: 1px solid var(--border-light);
+    border: 1px solid #e2e8f0;
     cursor: pointer;
   }
 
   .resource-menu-item:hover {
-    background: var(--ocean-light);
+    background: #e0f2f1;
     transform: translateX(4px);
-    border-color: var(--ocean);
+    border-color: #4a8b94;
   }
 
   .resource-menu-item small {
-    color: var(--text-muted);
+    color: #475569;
     font-size: 0.8rem;
-  }
+  }  
 
   /* Charts & Maps */
   .charts-grid {
@@ -590,7 +584,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     </div>
     <div class="data-grid">
       
-      <div class="data-card" onclick="toggleResourceMenu('afg-temp-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('afg-temp-menu', event)">
         <h4>Temperature</h4><div class="metric">+1.8°C</div>
         <p>Average temperature increase since 1960. Warming rate exceeds global average.</p>
         <span class="trend up">Rising Trend</span>
@@ -602,7 +596,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('afg-rain-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('afg-rain-menu', event)">
         <h4>Rainfall</h4><div class="metric">-12%</div>
         <p>Overall decrease in annual precipitation. Increased variability.</p>
         <span class="trend down">Decreasing</span>
@@ -614,7 +608,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('afg-co2-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('afg-co2-menu', event)">
         <h4>CO2 Level</h4><div class="metric">415 ppm</div>
         <p>CO₂ concentration levels. Methane emissions contributing to greenhouse effect.</p>
         <span class="trend up">Increasing</span>
@@ -626,7 +620,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('afg-glacier-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('afg-glacier-menu', event)">
         <h4>Glacier Melting</h4><div class="metric">-25%</div>
         <p>Glacier mass loss in Hindu Kush mountains. Snow cover duration reduced.</p>
         <span class="trend down">Rapid Melt</span>
@@ -638,7 +632,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('afg-water-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('afg-water-menu', event)">
         <h4>Water Resources</h4><div class="metric">-30%</div>
         <p>Reduction in water availability per capita. Groundwater depletion.</p>
         <span class="trend down">Critical</span>
@@ -650,7 +644,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('afg-heat-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('afg-heat-menu', event)">
         <h4>Heatwaves</h4><div class="metric">+45°C</div>
         <p>Maximum temperatures during heatwaves. Frequency increased 3x since 1980.</p>
         <span class="trend up">More Frequent</span>
@@ -677,7 +671,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     </div>
     <div class="data-grid">
       
-      <div class="data-card" onclick="toggleResourceMenu('pak-temp-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('pak-temp-menu', event)">
         <h4>Temperature</h4><div class="metric">+1.5°C</div>
         <p>Average temperature rise since 1960. Urban heat islands showing +2.5°C increases.</p>
         <span class="trend up">Rising</span>
@@ -689,7 +683,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('pak-rain-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('pak-rain-menu', event)">
         <h4>Rainfall</h4><div class="metric">+8%</div>
         <p>Overall increase but highly erratic. Monsoon intensity up 25%.</p>
         <span class="trend up">Variable</span>
@@ -701,7 +695,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('pak-co2-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('pak-co2-menu', event)">
         <h4>CO2 Level</h4><div class="metric">418 ppm</div>
         <p>CO₂ levels rising. Industrial emissions contributing to urban air quality crisis.</p>
         <span class="trend up">Increasing</span>
@@ -713,7 +707,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('pak-glacier-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('pak-glacier-menu', event)">
         <h4>Glacier Melting</h4><div class="metric">-35%</div>
         <p>Glacier retreat in Karakoram and Himalayas. Over 7,000 glaciers at risk.</p>
         <span class="trend down">Critical</span>
@@ -725,7 +719,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('pak-water-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('pak-water-menu', event)">
         <h4>Water Resources</h4><div class="metric">1000m³</div>
         <p>Water availability per capita dropped to critical levels.</p>
         <span class="trend down">Critical</span>
@@ -737,7 +731,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('pak-heat-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('pak-heat-menu', event)">
         <h4>Heatwaves</h4><div class="metric">+52°C</div>
         <p>Record temperatures in Sindh and Punjab. Heatwave duration extended.</p>
         <span class="trend up">Deadly</span>
@@ -764,7 +758,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     </div>
     <div class="data-grid">
       
-      <div class="data-card" onclick="toggleResourceMenu('ind-temp-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('ind-temp-menu', event)">
         <h4>Temperature</h4><div class="metric">+1.3°C</div>
         <p>Average temperature increase. Himalayan region warming 2x faster than global average.</p>
         <span class="trend up">Rising</span>
@@ -776,7 +770,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('ind-rain-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('ind-rain-menu', event)">
         <h4>Rainfall</h4><div class="metric">+10%</div>
         <p>Monsoon rainfall increased but more erratic. Extreme rainfall events up 75%.</p>
         <span class="trend up">Erratic</span>
@@ -788,7 +782,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('ind-co2-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('ind-co2-menu', event)">
         <h4>CO2 Level</h4><div class="metric">420 ppm</div>
         <p>CO₂ concentration. India is 3rd largest emitter globally.</p>
         <span class="trend up">High</span>
@@ -800,7 +794,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('ind-glacier-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('ind-glacier-menu', event)">
         <h4>Glacier Melting</h4><div class="metric">-40%</div>
         <p>Himalayan glaciers retreating rapidly. Gangotri glacier retreating 20-30m/year.</p>
         <span class="trend down">Alarmingly</span>
@@ -812,7 +806,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('ind-water-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('ind-water-menu', event)">
         <h4>Water Resources</h4><div class="metric">-45%</div>
         <p>Groundwater depletion in Punjab, Haryana, Rajasthan.</p>
         <span class="trend down">Crisis</span>
@@ -824,7 +818,7 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
         </div>
       </div>
 
-      <div class="data-card" onclick="toggleResourceMenu('ind-heat-menu')">
+      <div class="data-card" onclick="toggleResourceMenu('ind-heat-menu', event)">
         <h4>Heatwaves</h4><div class="metric">+50°C</div>
         <p>Heatwave frequency up 8x since 1960. 2022 saw earliest heatwave on record.</p>
         <span class="trend up">Extreme</span>
@@ -1066,24 +1060,39 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     });
   });
 
-  // --- NEW CODE FOR RESOURCE MENUS ---
-    function toggleResourceMenu(menuId) {
+  function toggleResourceMenu(menuId, event) {
+    if (event) {
       event.stopPropagation();
-      const menu = document.getElementById(menuId);
-      const allMenus = document.querySelectorAll('.resource-menu');
-      
-      allMenus.forEach(m => {
-        if (m.id !== menuId) m.style.display = 'none';
-      });
-      
-      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
     }
+    
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    
+    // Close all other menus
+    const allMenus = document.querySelectorAll('.resource-menu');
+    allMenus.forEach(m => {
+      if (m.id !== menuId) {
+        m.style.display = 'none';
+      }
+    });
+    
+    // Toggle this menu
+    if (menu.style.display === 'none' || menu.style.display === '') {
+      menu.style.display = 'block';
+    } else {
+      menu.style.display = 'none';
+    }
+  }
 
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.resource-menu').forEach(menu => {
+  // Close menus when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!event.target.closest('.data-card')) {
+      const allMenus = document.querySelectorAll('.resource-menu');
+      allMenus.forEach(menu => {
         menu.style.display = 'none';
       });
-    });
+    }
+  }); 
 </script>
   </body>
 </html>
