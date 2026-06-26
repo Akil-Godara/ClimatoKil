@@ -12,7 +12,7 @@ export async function onRequest(context) {
     });
 
     // 2. Search Vectorize for the best matching climate facts
-    const matches = await env.VECTORIZE_INDEX.query(queryEmbedding.data[0], { 
+    const matches = await env.VECTORIZE.query(queryEmbedding.data[0], { 
       topK: 3, 
       returnMetadata: true 
     });
@@ -20,8 +20,8 @@ export async function onRequest(context) {
     // 3. Combine the matched facts into a "context" string
     const contextText = matches.matches.map(m => m.metadata.text).join('\n');
 
-    // 4. Ask the AI to answer using ONLY those facts
-    const aiResponse = await env.AI.run('@cf/meta/llama-3-8b-instruct', {
+    // 4. Ask Mistral 7B to answer using ONLY those facts
+    const aiResponse = await env.AI.run('@cf/mistral/mistral-7b-instruct-v0.1', {
       messages: [
         { role: 'system', content: `You are ClimatoKil AI. Answer the user's question using ONLY this context data:\n\n${contextText}\n\nIf the answer is not in the context, say "I don't have specific data on that in my archive yet."` },
         ...messages
