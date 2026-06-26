@@ -1097,9 +1097,12 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
             const res = await fetch('/api/chat', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ messages: chatHistoryArray })
+              body: JSON.stringify({ messages: chatHistory })
             });
-            const data = await res.json();
+            const data = await response.json();
+
+            // MAKE SURE IT SAYS data.reply here
+            const botMessage = data.reply;
 
             loadingBubble.remove();
 
