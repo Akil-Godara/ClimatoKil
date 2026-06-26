@@ -911,6 +911,66 @@ const title = "ClimatoKil - South Asia Climate Data Archive";
     <p style="font-size: 1.1rem; margin-bottom: 10px;">Built by @Akil Godara</p>
     <p style="opacity: 0.7; font-size: 0.9rem;">© 2026 ClimatoKil - Data Sources: IPCC, NOAA, NASA, ISRO, World Bank</p>
   </footer>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const years = ['1960', '1970', '1980', '1990', '2000', '2010', '2020', '2024'];
     
+    // 1. Temperature Trends Chart
+    new Chart(document.getElementById('tempChart'), {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [
+          { label: 'Afghanistan', data: [0, 0.2, 0.5, 0.8, 1.1, 1.4, 1.6, 1.8], borderColor: '#c17a5a', backgroundColor: 'rgba(193,122,90,0.1)', tension: 0.3 },
+          { label: 'Pakistan', data: [0, 0.1, 0.4, 0.7, 0.9, 1.2, 1.4, 1.5], borderColor: '#5b9ea6', backgroundColor: 'rgba(91,158,166,0.1)', tension: 0.3 },
+          { label: 'India', data: [0, 0.1, 0.3, 0.6, 0.8, 1.0, 1.2, 1.3], borderColor: '#7a9e7e', backgroundColor: 'rgba(122,158,126,0.1)', tension: 0.3 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Temperature Anomaly (°C)' } } } }
+    });
+
+    // 2. Precipitation Patterns Chart
+    new Chart(document.getElementById('precipChart'), {
+      type: 'bar',
+      data: {
+        labels: years,
+        datasets: [
+          { label: 'Afghanistan', data: [0, -2, -5, -7, -9, -10, -11, -12], backgroundColor: 'rgba(193,122,90,0.7)' },
+          { label: 'Pakistan', data: [0, 1, 3, 5, 6, 7, 8, 8], backgroundColor: 'rgba(91,158,166,0.7)' },
+          { label: 'India', data: [0, 2, 4, 6, 8, 9, 10, 10], backgroundColor: 'rgba(122,158,126,0.7)' }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { title: { display: true, text: 'Change from Baseline (%)' } } } }
+    });
+
+    // 3. Glacier Mass Balance Chart
+    new Chart(document.getElementById('glacierChart'), {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [
+          { label: 'Afghanistan (Hindu Kush)', data: [0, -5, -10, -15, -18, -22, -24, -25], borderColor: '#c17a5a', tension: 0.3 },
+          { label: 'Pakistan (Karakoram)', data: [0, -8, -15, -22, -28, -32, -34, -35], borderColor: '#5b9ea6', tension: 0.3 },
+          { label: 'India (Himalayas)', data: [0, -10, -20, -28, -34, -38, -40, -40], borderColor: '#7a9e7e', tension: 0.3 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { title: { display: true, text: 'Mass Loss (%)' } } } }
+    });
+
+    // 4. Water Stress Index Chart
+    new Chart(document.getElementById('waterChart'), {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [
+          { label: 'Afghanistan', data: [2500, 2300, 2100, 1900, 1800, 1750, 1700, 1750], borderColor: '#c17a5a', tension: 0.3 },
+          { label: 'Pakistan', data: [5000, 4000, 3000, 2200, 1600, 1200, 1000, 1000], borderColor: '#5b9ea6', tension: 0.3 },
+          { label: 'India', data: [4000, 3200, 2500, 2000, 1600, 1300, 1100, 1100], borderColor: '#7a9e7e', tension: 0.3 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { title: { display: true, text: 'Water per Capita (m³)' } } } }
+    });
+  });
+</script>
   </body>
 </html>
