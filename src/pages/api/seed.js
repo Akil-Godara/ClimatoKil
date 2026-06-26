@@ -1,5 +1,5 @@
-export async function onRequest(context) {
-  const { env } = context;
+export async function GET({ locals }) {
+  const env = locals.runtime.env;
   
   const climateData = [
     { id: 'afg-temp', text: 'Afghanistan average temperature increased by +1.8°C since 1960. Warming rate exceeds global average.' },
@@ -11,10 +11,7 @@ export async function onRequest(context) {
 
   try {
     for (const item of climateData) {
-      // IMPORTANT: We use 'text' here, not 'inputs'
-      const embedding = await env.AI.run('@cf/baai/bge-base-en-v1.5', { 
-        text: item.text 
-      });
+      const embedding = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text: item.text });
       
       await env.VECTORIZE.insert([{
         id: item.id,
@@ -27,6 +24,6 @@ export async function onRequest(context) {
       headers: { 'Content-Type': 'text/plain' }
     });
   } catch (error) {
-    return new Response(' Error: ' + error.message, { status: 500 });
+    return new Response('❌ Error: ' + error.message, { status: 500 });
   }
 }

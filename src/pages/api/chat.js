@@ -1,11 +1,12 @@
-export async function onRequest(context) {
-  const { request, env } = context;
+export async function POST({ request, locals }) {
+  // In Astro SSR, the environment bindings are on 'locals.runtime.env'
+  const env = locals.runtime.env;
   
   try {
     const { messages } = await request.json();
     const userQuestion = messages[messages.length - 1].content;
 
-    // 1. Generate embedding (FIXED: changed 'inputs' to 'text')
+    // 1. Generate embedding (Using 'text' property)
     const queryEmbedding = await env.AI.run('@cf/baai/bge-base-en-v1.5', { 
       text: userQuestion 
     });
@@ -29,7 +30,6 @@ export async function onRequest(context) {
       ]
     });
 
-    // 5. Handle response
     const reply = aiResponse.response || aiResponse.result || JSON.stringify(aiResponse);
 
     return new Response(JSON.stringify({ reply }), {
@@ -37,10 +37,7 @@ export async function onRequest(context) {
     });
 
   } catch (error) {
-    console.error('Chat error:', error);
-    return new Response(JSON.stringify({ 
-      reply: `Error: ${error.message}` 
-    }), {
+    return new Response(JSON.stringify({ reply: `Error: ${error.message}` }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500
     });
