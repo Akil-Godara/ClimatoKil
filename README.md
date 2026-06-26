@@ -1,4 +1,4 @@
-cat > README.md << 'EOF'
+ 
 # 🌍 ClimatoKil - South Asia Climate Data Archive
 
 A comprehensive climate data visualization platform tracking environmental changes across **Afghanistan, Pakistan, and India** from 1960 to present.
